@@ -78,51 +78,113 @@ export const HeroHeader: React.FC = () => {
           </motion.div>
         </div>
 
-        {/* Visualización del Dashboard (Simulación) */}
+        {/* Visualización del Dashboard con Microinteracciones */}
         <motion.div 
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 1, delay: 0.4 }}
-          className="relative hidden lg:block"
+          className="relative hidden lg:block perspective-1000"
         >
-          <div className="relative z-10 bg-slate-900/40 backdrop-blur-md border border-brand-blue/20 rounded-2xl p-6 shadow-2xl">
-            <div className="flex items-center justify-between mb-8 border-b border-white/5 pb-4">
+          <motion.div 
+            whileHover={{ y: -10, rotateX: 2, rotateY: -2 }}
+            transition={{ type: "spring", stiffness: 300, damping: 20 }}
+            className="relative z-10 bg-slate-900/60 backdrop-blur-xl border border-brand-blue/30 rounded-2xl p-6 shadow-[0_20px_50px_rgba(0,0,0,0.5)] cursor-default"
+          >
+            {/* Header del Dashboard */}
+            <div className="flex items-center justify-between mb-8 border-b border-white/10 pb-4">
               <div className="flex gap-2">
-                <div className="w-3 h-3 rounded-full bg-red-500/50" />
-                <div className="w-3 h-3 rounded-full bg-yellow-500/50" />
-                <div className="w-3 h-3 rounded-full bg-green-500/50" />
+                <motion.div whileHover={{ scale: 1.2 }} className="w-3 h-3 rounded-full bg-red-500/50 cursor-pointer" />
+                <motion.div whileHover={{ scale: 1.2 }} className="w-3 h-3 rounded-full bg-yellow-500/50 cursor-pointer" />
+                <motion.div whileHover={{ scale: 1.2 }} className="w-3 h-3 rounded-full bg-green-500/50 cursor-pointer" />
               </div>
-              <div className="text-xs text-brand-blue font-mono tracking-wider uppercase">SW DISICO AI ENGINE</div>
+              <div className="text-[10px] text-brand-blue font-mono tracking-[0.2em] uppercase">SW DISICO AI ENGINE v2.5</div>
             </div>
 
+            {/* Grid de Estadísticas con Hover individual */}
             <div className="grid grid-cols-2 gap-4 mb-6">
-              <div className="bg-brand-blue/10 p-4 rounded-xl border border-brand-blue/20">
-                <div className="text-gray-400 text-xs mb-1">Precisión</div>
-                <div className="text-2xl font-bold text-white">98.4%</div>
-                <div className="text-green-400 text-xs flex items-center gap-1 mt-1">
+              <motion.div 
+                whileHover={{ scale: 1.05, borderColor: 'rgba(48, 103, 126, 0.6)', backgroundColor: 'rgba(48, 103, 126, 0.15)' }}
+                className="bg-brand-blue/10 p-4 rounded-xl border border-brand-blue/20 transition-colors duration-300"
+              >
+                <div className="text-gray-400 text-[10px] uppercase tracking-wider mb-1 font-semibold">Precisión del Modelo</div>
+                <div className="text-2xl font-bold text-white tracking-tight">98.4%</div>
+                <div className="text-green-400 text-xs flex items-center gap-1 mt-1 font-medium">
                   <TrendingUp className="w-3 h-3" /> +2.1%
                 </div>
-              </div>
-              <div className="bg-brand-orange/10 p-4 rounded-xl border border-brand-orange/20 relative overflow-hidden">
-                <div className="text-gray-400 text-xs mb-1">Recuperación</div>
-                <div className="text-2xl font-bold text-brand-orange">40-70%</div>
-                <div className="text-brand-orange/80 text-xs mt-1 font-semibold">REDUCCIÓN NTL</div>
-              </div>
+              </motion.div>
+
+              <motion.div 
+                whileHover={{ scale: 1.05, borderColor: 'rgba(244, 132, 35, 0.6)', backgroundColor: 'rgba(244, 132, 35, 0.15)' }}
+                className="bg-brand-orange/10 p-4 rounded-xl border border-brand-orange/20 relative overflow-hidden transition-colors duration-300"
+              >
+                <div className="text-gray-400 text-[10px] uppercase tracking-wider mb-1 font-semibold">Recuperación Media</div>
+                <div className="text-2xl font-bold text-brand-orange tracking-tight">40-70%</div>
+                <div className="text-brand-orange/80 text-[10px] mt-1 font-bold">REDUCCIÓN NTL</div>
+                {/* Animación de brillo interno en hover */}
+                <motion.div 
+                  className="absolute -bottom-4 -right-4 w-12 h-12 bg-brand-orange/30 rounded-full blur-xl"
+                  animate={{ scale: [1, 1.2, 1], opacity: [0.5, 0.8, 0.5] }}
+                  transition={{ duration: 3, repeat: Infinity }}
+                />
+              </motion.div>
             </div>
 
-            <div className="h-32 flex items-end justify-between gap-1 px-2">
+            {/* Gráfico de Barras con Interacción individual */}
+            <div className="h-32 flex items-end justify-between gap-1.5 px-1 group/chart">
               {[40, 65, 45, 70, 85, 60, 75, 90, 65, 80].map((h, i) => (
                 <motion.div 
                   key={i}
                   initial={{ height: 0 }}
                   animate={{ height: `${h}%` }}
-                  transition={{ duration: 0.5, delay: 1 + (i * 0.1) }}
-                  className="w-full bg-gradient-to-t from-brand-blue/50 to-brand-blue rounded-t-sm opacity-80"
-                />
+                  whileHover={{ 
+                    height: `${h + 5}%`, 
+                    opacity: 1, 
+                    filter: 'brightness(1.5)',
+                    transition: { duration: 0.2 }
+                  }}
+                  transition={{ 
+                    duration: 0.6, 
+                    delay: 0.8 + (i * 0.08),
+                    ease: "easeOut" 
+                  }}
+                  className="w-full bg-gradient-to-t from-brand-blue/40 to-brand-blue rounded-t-[2px] opacity-70 cursor-pointer relative group/bar"
+                >
+                  {/* Tooltip simple en hover de barra */}
+                  <div className="absolute -top-6 left-1/2 -translate-x-1/2 bg-brand-blue px-1.5 py-0.5 rounded text-[8px] text-white opacity-0 group-hover/bar:opacity-100 transition-opacity font-bold">
+                    {h}%
+                  </div>
+                </motion.div>
               ))}
             </div>
-          </div>
-          <div className="absolute -top-10 -right-10 w-full h-full border border-brand-blue/10 rounded-2xl -z-10" />
+
+            {/* Footer del Dashboard */}
+            <div className="mt-5 flex justify-between items-center text-[9px] text-gray-500 font-mono tracking-widest border-t border-white/5 pt-3">
+               <div className="flex items-center gap-1.5">
+                 <div className="w-1 h-1 rounded-full bg-brand-blue" />
+                 <span>ANÁLISIS DE CARGA</span>
+               </div>
+               <div className="flex items-center gap-1.5 text-brand-orange/80 font-bold">
+                 <Zap className="w-2.5 h-2.5" />
+                 <span>DETECCIÓN EN TIEMPO REAL</span>
+               </div>
+            </div>
+          </motion.div>
+
+          {/* Sombras y elementos decorativos flotantes */}
+          <motion.div 
+            animate={{ y: [0, -15, 0] }}
+            transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+            className="absolute -top-12 -right-12 w-32 h-32 border border-brand-blue/20 rounded-full -z-10 blur-sm" 
+          />
+          <motion.div 
+            animate={{ y: [0, 15, 0] }}
+            transition={{ duration: 5, repeat: Infinity, ease: "easeInOut", delay: 1 }}
+            className="absolute -bottom-12 -left-12 w-24 h-24 border border-brand-orange/10 rounded-full -z-10 blur-sm" 
+          />
+          
+          {/* Capas de profundidad tras la tarjeta */}
+          <div className="absolute -top-5 -right-5 w-full h-full border border-brand-blue/10 rounded-2xl -z-10 translate-x-2 translate-y-2 opacity-50" />
+          <div className="absolute -top-10 -right-10 w-full h-full border border-brand-blue/5 rounded-2xl -z-20 translate-x-4 translate-y-4 opacity-30" />
         </motion.div>
       </div>
     </section>
