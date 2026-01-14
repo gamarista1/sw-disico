@@ -2,21 +2,31 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { ArrowRight, Zap, TrendingUp, ShieldCheck } from 'lucide-react';
 import { Button } from '../../shared/components/ui/Button';
+import Lightning from '../../shared/components/ui/Lightning';
 
 export const HeroHeader: React.FC = () => {
   return (
     <section className="relative w-full min-h-screen flex items-center justify-center overflow-hidden bg-slate-950">
-      {/* Fondo con Grid y Gradiente */}
-      <div className="absolute inset-0 z-0 opacity-20 bg-grid-pattern bg-grid pointer-events-none" />
-      <div className="absolute inset-0 z-0 bg-gradient-to-br from-brand-blue/20 via-slate-950 to-slate-950 pointer-events-none" />
       
-      {/* Efectos de Brillo */}
+      {/* Background Layer 1: Electricity / Lightning Effect */}
+      <div className="absolute inset-0 z-0 opacity-40 pointer-events-none mix-blend-screen">
+        <Lightning hue={198} speed={0.4} intensity={0.6} size={0.5} xOffset={-0.5} />
+      </div>
+      <div className="absolute inset-0 z-0 opacity-20 pointer-events-none mix-blend-screen overflow-hidden scale-150 rotate-12 translate-x-1/4">
+        <Lightning hue={20} speed={0.2} intensity={0.4} size={0.8} xOffset={0.2} />
+      </div>
+
+      {/* Background Layer 2: Grid & Gradient */}
+      <div className="absolute inset-0 z-0 opacity-20 bg-grid-pattern bg-grid pointer-events-none" />
+      <div className="absolute inset-0 z-0 bg-gradient-to-br from-brand-blue/30 via-slate-950/80 to-slate-950 pointer-events-none" />
+      
+      {/* Floating Particles/Glows */}
       <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-brand-blue/10 rounded-full blur-3xl" />
       <div className="absolute bottom-1/4 right-1/4 w-64 h-64 bg-brand-orange/5 rounded-full blur-3xl" />
 
       <div className="container mx-auto px-4 z-10 relative grid lg:grid-cols-2 gap-12 items-center">
         
-        {/* Contenido de Texto */}
+        {/* Text Content */}
         <div className="space-y-8 text-center lg:text-left">
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
@@ -25,7 +35,7 @@ export const HeroHeader: React.FC = () => {
             className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-brand-blue/10 border border-brand-blue/30 backdrop-blur-sm"
           >
             <ShieldCheck className="w-4 h-4 text-brand-orange" />
-            <span className="text-sm font-medium text-gray-300">Tecnología de Grado Utility</span>
+            <span className="text-sm font-medium text-gray-300 uppercase tracking-widest">Tecnología de Grado Utility</span>
           </motion.div>
 
           <motion.h1 
@@ -72,13 +82,13 @@ export const HeroHeader: React.FC = () => {
               Algoritmo Activo
             </div>
             <div className="flex items-center gap-2">
-              <Zap className="w-4 h-4" />
+              <Zap className="w-4 h-4 text-brand-orange" />
               Integration Ready (DLMS)
             </div>
           </motion.div>
         </div>
 
-        {/* Visualización del Dashboard con Microinteracciones */}
+        {/* Visual Element / Dashboard Preview with interactions */}
         <motion.div 
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
@@ -149,7 +159,6 @@ export const HeroHeader: React.FC = () => {
                   }}
                   className="w-full bg-gradient-to-t from-brand-blue/40 to-brand-blue rounded-t-[2px] opacity-70 cursor-pointer relative group/bar"
                 >
-                  {/* Tooltip simple en hover de barra */}
                   <div className="absolute -top-6 left-1/2 -translate-x-1/2 bg-brand-blue px-1.5 py-0.5 rounded text-[8px] text-white opacity-0 group-hover/bar:opacity-100 transition-opacity font-bold">
                     {h}%
                   </div>
@@ -182,10 +191,10 @@ export const HeroHeader: React.FC = () => {
             className="absolute -bottom-12 -left-12 w-24 h-24 border border-brand-orange/10 rounded-full -z-10 blur-sm" 
           />
           
-          {/* Capas de profundidad tras la tarjeta */}
           <div className="absolute -top-5 -right-5 w-full h-full border border-brand-blue/10 rounded-2xl -z-10 translate-x-2 translate-y-2 opacity-50" />
           <div className="absolute -top-10 -right-10 w-full h-full border border-brand-blue/5 rounded-2xl -z-20 translate-x-4 translate-y-4 opacity-30" />
         </motion.div>
+
       </div>
     </section>
   );
