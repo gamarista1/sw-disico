@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SW DISICO | AI Energy Recovery</title>
+    <!-- Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        darkMode: 'class',
+        theme: {
+          extend: {
+            colors: {
+              'brand-blue': '#30677E',
+              'brand-orange': '#F48423',
+              'slate-950': '#030712',
+            },
+            fontFamily: {
+              sans: ['Inter', 'sans-serif'],
+            },
+            backgroundImage: {
+              'grid-pattern': "linear-gradient(to right, #30677E20 1px, transparent 1px), linear-gradient(to bottom, #30677E20 1px, transparent 1px)",
+            }
+          }
+        }
+      }
+    </script>
+    <style>
+      body {
+        background-color: #030712;
+        color: white;
+      }
+      .bg-grid {
+        background-size: 40px 40px;
+      }
+    </style>
+    <script type="importmap">
+    {
+      "imports": {
+        "lucide-react": "https://esm.sh/lucide-react@^0.562.0",
+        "react/": "https://esm.sh/react@^19.2.3/",
+        "react": "https://esm.sh/react@^19.2.3",
+        "react-dom/": "https://esm.sh/react-dom@^19.2.3/",
+        "framer-motion": "https://esm.sh/framer-motion@^12.26.2",
+        "@supabase/supabase-js": "https://esm.sh/@supabase/supabase-js@^2.90.1"
+      }
+    }
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/index.tsx"></script>
+  </body>
+</html>
