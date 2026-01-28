@@ -15,7 +15,7 @@ interface ModalProps {
 const Modal: React.FC<ModalProps> = ({ isOpen, onClose, title, children, fullWidth = false }) => (
   <AnimatePresence>
     {isOpen && (
-      <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+      <div className="fixed inset-0 z-[100] flex items-center justify-center p-2 sm:p-4">
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -27,20 +27,20 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, title, children, fullWid
           initial={{ opacity: 0, scale: 0.9, y: 20 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.9, y: 20 }}
-          className={`relative w-full ${fullWidth ? 'max-w-6xl' : 'max-w-lg'} bg-slate-900 border border-brand-blue/30 rounded-3xl overflow-hidden shadow-2xl z-10`}
+          className={`relative w-[95%] sm:w-full ${fullWidth ? 'max-w-6xl' : 'max-w-lg'} h-auto max-h-[90vh] bg-slate-900 border border-brand-blue/30 rounded-3xl overflow-hidden shadow-2xl z-10 flex flex-col`}
         >
-          <div className="flex justify-between items-center p-6 border-b border-white/5 bg-slate-900/50 backdrop-blur-md">
-            <div className="flex items-center gap-3">
-              <div className="w-8 h-8 rounded-lg bg-brand-blue/10 flex items-center justify-center">
-                <Globe className="w-5 h-5 text-brand-blue" />
+          <div className="flex justify-between items-center p-4 sm:p-6 border-b border-white/5 bg-slate-900/50 backdrop-blur-md shrink-0">
+            <div className="flex items-center gap-2 sm:gap-3">
+              <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-brand-blue/10 flex items-center justify-center">
+                <Globe className="w-4 h-4 sm:w-5 h-5 text-brand-blue" />
               </div>
-              <h3 className="text-xl font-bold text-white tracking-tight">{title}</h3>
+              <h3 className="text-lg sm:text-xl font-bold text-white tracking-tight">{title}</h3>
             </div>
             <button onClick={onClose} className="p-2 hover:bg-white/5 rounded-full transition-colors group">
               <X className="w-5 h-5 text-gray-400 group-hover:text-white transition-colors" />
             </button>
           </div>
-          <div className="text-slate-300">
+          <div className="text-slate-300 flex-1 overflow-y-auto custom-scrollbar">
             {children}
           </div>
         </motion.div>
@@ -359,7 +359,7 @@ export const LossAnalysis: React.FC = () => {
       <Modal 
         isOpen={activeModal === 'regional'} 
         onClose={() => setActiveModal(null)} 
-        title="Diagnóstico Planetario Interactivo"
+        title="Impacto Global NTL"
         fullWidth
       >
         <GlobalImpactGlobe />
