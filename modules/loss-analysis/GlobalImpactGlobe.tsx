@@ -46,58 +46,59 @@ const colorScale = scaleLinear<string>()
   .range(["#30677E", "#30677E", "#F48423", "#EF4444"]);
 
 export const GlobalImpactGlobe: React.FC = () => {
-  // Sync Engine State
   const [currentIndex, setCurrentIndex] = useState(0);
   const [rotation, setRotation] = useState<[number, number, number]>([-75, -5, 0]);
+  const [windowWidth, setWindowWidth] = useState(typeof window !== 'undefined' ? window.innerWidth : 1024);
+
+  useEffect(() => {
+    const handleResize = () => setWindowWidth(window.innerWidth);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   const activeCountry = GLOBAL_DATASET[currentIndex];
 
-  // Logic to move the globe smoothly to coordinates
   useEffect(() => {
     const [lon, lat] = activeCountry.coordinates;
     setRotation([-lon, -lat, 0]);
   }, [currentIndex]);
 
-  const handleNext = () => {
-    setCurrentIndex((prev) => (prev + 1) % GLOBAL_DATASET.length);
-  };
+  const handleNext = () => setCurrentIndex((prev) => (prev + 1) % GLOBAL_DATASET.length);
+  const handlePrev = () => setCurrentIndex((prev) => (prev - 1 + GLOBAL_DATASET.length) % GLOBAL_DATASET.length);
 
-  const handlePrev = () => {
-    setCurrentIndex((prev) => (prev - 1 + GLOBAL_DATASET.length) % GLOBAL_DATASET.length);
-  };
+  // Responsive projection scale
+  const globeScale = windowWidth < 640 ? 300 : windowWidth < 1024 ? 350 : 320;
 
   return (
-    <div className="flex flex-col lg:flex-row h-[90vh] lg:h-[700px] w-full bg-slate-900 border border-white/5 overflow-hidden">
+    <div className="flex flex-col lg:flex-row h-[95vh] lg:h-[700px] w-full bg-slate-900 border border-white/5 overflow-hidden">
       
-      {/* PANEL IZQUIERDO: EL GLOBO (CAMARA VIRTUAL) */}
-      <div className="relative h-[40%] sm:h-[45%] lg:h-full lg:flex-[1.2] bg-slate-950 overflow-hidden border-b lg:border-b-0 lg:border-r border-white/5">
-        {/* Glow atmosférico */}
+      {/* PANEL IZQUIERDO: EL GLOBO - 50% HEIGHT EN MOBILE */}
+      <div className="relative h-[45%] sm:h-[50%] lg:h-full lg:flex-[1.2] bg-slate-950 overflow-hidden border-b lg:border-b-0 lg:border-r border-white/5">
         <div className="absolute inset-0 pointer-events-none z-0">
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] sm:w-[700px] h-[400px] sm:h-[700px] rounded-full bg-brand-blue/5 blur-[80px] sm:blur-[120px]" />
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[350px] sm:w-[600px] h-[350px] sm:h-[600px] rounded-full bg-brand-blue/5 blur-[60px] sm:blur-[100px]" />
         </div>
 
-        {/* Indicador de Proyección */}
-        <div className="absolute top-4 left-4 sm:top-6 sm:left-6 z-20">
+        {/* Cámara Indicator - Hidden/Small on very small mobile */}
+        <div className="absolute top-3 left-3 sm:top-6 sm:left-6 z-20">
           <motion.div 
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
-            className="flex items-center gap-2 sm:gap-3 bg-slate-900/80 backdrop-blur-md px-3 py-1.5 sm:px-4 sm:py-2 rounded-xl sm:rounded-2xl border border-white/10"
+            className="flex items-center gap-2 bg-slate-900/80 backdrop-blur-md px-2.5 py-1 sm:px-4 sm:py-2 rounded-lg sm:rounded-2xl border border-white/10 shadow-lg"
           >
-            <Globe2 className="w-3.5 h-3.5 sm:w-4 h-4 text-brand-blue" />
+            <Globe2 className="w-3 h-3 sm:w-4 h-4 text-brand-blue" />
             <div className="flex flex-col">
-               <span className="text-[8px] sm:text-[10px] font-black text-white uppercase tracking-widest">Cámara Virtual</span>
-               <span className="text-[7px] sm:text-[9px] text-brand-blue font-bold uppercase">Proyección Ortográfica</span>
+               <span className="text-[7px] sm:text-[10px] font-black text-white uppercase tracking-widest">Diagnóstico</span>
+               <span className="text-[6px] sm:text-[9px] text-brand-blue font-bold uppercase">Planetario</span>
             </div>
           </motion.div>
         </div>
 
         <ComposableMap 
           projection="geoOrthographic"
-          projectionConfig={{ scale: 220, rotate: rotation }}
+          projectionConfig={{ scale: globeScale, rotate: rotation }}
           className="w-full h-full outline-none relative z-10"
         >
-          {/* id prop is required by type definitions for Sphere */}
-          <Sphere id="rsm-sphere" stroke="#30677E20" strokeWidth={1} fill="#030712" />
+          <Sphere id="rsm-sphere" stroke="#30677E20" strokeWidth={0.5} fill="#030712" />
           <Graticule stroke="#30677E10" strokeWidth={0.5} />
           
           <Geographies geography={geoUrl}>
@@ -115,7 +116,7 @@ export const GlobalImpactGlobe: React.FC = () => {
                     stroke={isActive ? "#ffffff" : "#030712"}
                     strokeWidth={isActive ? 1.5 : 0.2}
                     style={{
-                      default: { outline: 'none', transition: 'all 800ms cubic-bezier(0.23, 1, 0.32, 1)' },
+                      default: { outline: 'none', transition: 'all 600ms cubic-bezier(0.23, 1, 0.32, 1)' },
                       hover: { outline: 'none', cursor: match ? 'pointer' : 'default' },
                     }}
                     onClick={() => {
@@ -136,17 +137,17 @@ export const GlobalImpactGlobe: React.FC = () => {
               <Marker key={data.id} coordinates={data.coordinates}>
                 {isActive && (
                   <motion.circle
-                    r={12}
+                    r={windowWidth < 640 ? 10 : 12}
                     fill="none"
                     stroke={colorScale(data.loss)}
-                    strokeWidth={2}
+                    strokeWidth={1.5}
                     initial={{ scale: 0, opacity: 1 }}
                     animate={{ scale: [0, 2], opacity: [1, 0] }}
                     transition={{ duration: 1.5, repeat: Infinity, ease: "easeOut" }}
                   />
                 )}
                 <circle
-                  r={isActive ? 5 : 2.5}
+                  r={isActive ? (windowWidth < 640 ? 4 : 5) : 2.5}
                   fill={isActive ? "#ffffff" : colorScale(data.loss)}
                   stroke="#ffffff"
                   strokeWidth={isActive ? 1.5 : 0}
@@ -157,33 +158,33 @@ export const GlobalImpactGlobe: React.FC = () => {
           })}
         </ComposableMap>
 
-        {/* Etiqueta Flotante sobre el globo (Nombre del país actual) */}
-        <div className="absolute bottom-4 left-4 sm:bottom-6 sm:left-6 z-20">
+        {/* Floating Label with Flag - Smaller on mobile */}
+        <div className="absolute bottom-3 left-3 sm:bottom-6 sm:left-6 z-20">
            <AnimatePresence mode="wait">
              <motion.div
                key={activeCountry.id}
-               initial={{ opacity: 0, y: 10 }}
+               initial={{ opacity: 0, y: 5 }}
                animate={{ opacity: 1, y: 0 }}
-               exit={{ opacity: 0, y: -10 }}
-               className="flex items-center gap-2 sm:gap-3 bg-white/5 backdrop-blur-md border border-white/10 p-2 sm:p-3 rounded-xl sm:rounded-2xl"
+               exit={{ opacity: 0, y: -5 }}
+               className="flex items-center gap-2 bg-slate-900/90 backdrop-blur-md border border-white/10 p-1.5 sm:p-3 rounded-lg sm:rounded-2xl shadow-xl"
              >
-                <img src={activeCountry.flag} className="w-8 h-5 sm:w-10 h-7 rounded shadow-lg object-cover" />
-                <span className="text-sm sm:text-xl font-black text-white tracking-tighter uppercase">{activeCountry.name}</span>
+                <img src={activeCountry.flag} className="w-6 h-4 sm:w-10 h-7 rounded shadow object-cover" />
+                <span className="text-xs sm:text-xl font-black text-white tracking-tighter uppercase">{activeCountry.name}</span>
              </motion.div>
            </AnimatePresence>
         </div>
       </div>
 
-      {/* PANEL DERECHO: LISTA + DETALLE (THE DATA SYNC) */}
-      <div className="flex-1 flex flex-col bg-slate-900 lg:w-[500px]">
+      {/* PANEL DERECHO: DATOS - 50% HEIGHT EN MOBILE */}
+      <div className="flex-1 flex flex-col bg-slate-900 h-[55%] sm:h-[50%] lg:h-full lg:w-[500px]">
         
-        {/* Superior: La "Tabla" / Lista de Países */}
-        <div className="flex items-center gap-2 p-3 sm:p-4 bg-slate-950/50 border-b border-white/5 overflow-x-auto no-scrollbar scroll-smooth">
+        {/* Lista Horizontal de Selección */}
+        <div className="flex items-center gap-1.5 p-2 sm:p-4 bg-slate-950/50 border-b border-white/5 overflow-x-auto no-scrollbar scroll-smooth">
           {GLOBAL_DATASET.map((data, idx) => (
             <button
               key={data.id}
               onClick={() => setCurrentIndex(idx)}
-              className={`flex-shrink-0 px-3 py-1.5 sm:px-4 sm:py-2 rounded-lg sm:rounded-xl text-[9px] sm:text-[10px] font-bold uppercase tracking-widest transition-all ${
+              className={`flex-shrink-0 px-2.5 py-1.5 sm:px-4 sm:py-2 rounded-lg sm:rounded-xl text-[8px] sm:text-[10px] font-bold uppercase tracking-widest transition-all ${
                 idx === currentIndex 
                   ? 'bg-brand-blue text-white shadow-lg shadow-brand-blue/20' 
                   : 'bg-white/5 text-slate-500 hover:bg-white/10'
@@ -194,100 +195,91 @@ export const GlobalImpactGlobe: React.FC = () => {
           ))}
         </div>
 
-        {/* Centro: Detalle del País (Data Card) */}
-        <div className="flex-1 overflow-y-auto custom-scrollbar p-5 sm:p-8 lg:p-10">
+        {/* Data Card Content - Compact on mobile */}
+        <div className="flex-1 overflow-y-auto custom-scrollbar p-4 sm:p-8">
           <AnimatePresence mode="wait">
             <motion.div
               key={activeCountry.id}
-              initial={{ opacity: 0, x: 20 }}
+              initial={{ opacity: 0, x: 10 }}
               animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -20 }}
-              transition={{ type: "spring", stiffness: 300, damping: 30 }}
-              className="space-y-6 sm:space-y-8"
+              exit={{ opacity: 0, x: -10 }}
+              className="space-y-4 sm:space-y-8"
             >
-              {/* Header Info */}
               <div className="flex items-start justify-between">
-                <div className="max-w-[70%]">
-                   <span className="text-[9px] sm:text-[10px] text-brand-blue font-black tracking-[0.2em] uppercase mb-1 sm:mb-2 block">Diagnóstico Detallado</span>
-                   <h2 className="text-2xl sm:text-4xl font-black text-white tracking-tighter leading-none mb-3 sm:mb-4">{activeCountry.name}</h2>
-                   <div className={`inline-flex items-center gap-1.5 sm:gap-2 px-2.5 py-1 rounded-full text-[8px] sm:text-[10px] font-black uppercase tracking-wider ${
+                <div className="max-w-[75%]">
+                   <span className="text-[8px] sm:text-[10px] text-brand-blue font-black tracking-widest uppercase mb-0.5 sm:mb-2 block">Diagnóstico Detallado</span>
+                   <h2 className="text-xl sm:text-4xl font-black text-white tracking-tighter leading-none mb-2 sm:mb-4">{activeCountry.name}</h2>
+                   <div className={`inline-flex items-center gap-1.5 px-2 py-0.5 sm:py-1 rounded-full text-[7px] sm:text-[10px] font-black uppercase tracking-wider ${
                       activeCountry.status === 'CRÍTICO' ? 'bg-red-500/10 text-red-500 border border-red-500/20' : 
                       activeCountry.status === 'OPORTUNIDAD' ? 'bg-orange-500/10 text-orange-500 border border-orange-500/20' : 'bg-brand-blue/10 text-brand-blue border border-brand-blue/20'
                     }`}>
-                      {activeCountry.status === 'CRÍTICO' ? <AlertCircle className="w-3 h-3 sm:w-3.5 sm:h-3.5" /> : 
-                       activeCountry.status === 'OPORTUNIDAD' ? <TrendingDown className="w-3 h-3 sm:w-3.5 sm:h-3.5" /> : <CheckCircle2 className="w-3 h-3 sm:w-3.5 sm:h-3.5" />}
+                      {activeCountry.status === 'CRÍTICO' ? <AlertCircle className="w-2.5 h-2.5 sm:w-3.5 sm:h-3.5" /> : 
+                       activeCountry.status === 'OPORTUNIDAD' ? <TrendingDown className="w-2.5 h-2.5 sm:w-3.5 sm:h-3.5" /> : <CheckCircle2 className="w-2.5 h-2.5 sm:w-3.5 sm:h-3.5" />}
                       {activeCountry.status}
                     </div>
                 </div>
                 <div className="relative shrink-0">
                   <motion.img 
                     src={activeCountry.flag} 
-                    className="w-14 h-9 sm:w-20 sm:h-14 rounded-xl shadow-2xl border border-white/10 object-cover" 
-                  />
-                  <motion.div 
-                    animate={{ scale: [1, 1.1, 1] }} 
-                    transition={{ duration: 2, repeat: Infinity }}
-                    className="absolute -inset-1 bg-white/5 rounded-xl -z-10" 
+                    className="w-12 h-8 sm:w-20 sm:h-14 rounded-lg sm:rounded-2xl shadow-xl border border-white/10 object-cover" 
                   />
                 </div>
               </div>
 
-              {/* Grid de Impacto */}
-              <div className="grid grid-cols-2 gap-3 sm:gap-5">
-                 <div className="bg-white/5 border border-white/5 p-4 sm:p-6 rounded-2xl sm:rounded-3xl relative overflow-hidden group">
-                    <span className="text-[8px] sm:text-[10px] text-slate-500 font-black uppercase mb-2 sm:mb-3 block">Pérdidas Totales</span>
-                    <div className="text-2xl sm:text-4xl font-mono font-black text-white leading-none">
-                       {activeCountry.loss}<span className="text-sm sm:text-lg text-slate-500 ml-1">%</span>
+              {/* Impact Grid - Compact sizes */}
+              <div className="grid grid-cols-2 gap-2 sm:gap-5">
+                 <div className="bg-white/5 border border-white/5 p-3 sm:p-6 rounded-xl sm:rounded-3xl">
+                    <span className="text-[7px] sm:text-[10px] text-slate-500 font-bold uppercase mb-1 sm:mb-3 block">Pérdidas</span>
+                    <div className="text-lg sm:text-4xl font-mono font-black text-white leading-none">
+                       {activeCountry.loss}<span className="text-xs sm:text-lg text-slate-500 ml-1">%</span>
                     </div>
-                    <TrendingUp className="absolute -bottom-2 -right-2 sm:-bottom-4 sm:-right-4 w-12 h-12 sm:w-16 sm:h-16 text-white/5 group-hover:scale-110 transition-transform" />
                  </div>
-                 <div className="bg-brand-orange/10 border border-brand-orange/20 p-4 sm:p-6 rounded-2xl sm:rounded-3xl relative overflow-hidden group">
-                    <span className="text-[8px] sm:text-[10px] text-brand-orange font-black uppercase mb-2 sm:mb-3 block">Recuperable</span>
-                    <div className="text-xl sm:text-3xl font-mono font-black text-white leading-none flex items-baseline gap-1">
-                       <span className="text-brand-orange text-lg">~</span>{activeCountry.potential}
+                 <div className="bg-brand-orange/10 border border-brand-orange/20 p-3 sm:p-6 rounded-xl sm:rounded-3xl">
+                    <span className="text-[7px] sm:text-[10px] text-brand-orange font-bold uppercase mb-1 sm:mb-3 block">Recuperable</span>
+                    <div className="text-lg sm:text-3xl font-mono font-black text-white leading-none flex items-baseline gap-0.5 sm:gap-1">
+                       <span className="text-brand-orange text-sm sm:text-xl">~</span>{activeCountry.potential}
                     </div>
-                    <span className="text-[7px] sm:text-[9px] text-brand-orange/60 font-black mt-1.5 sm:mt-2 block">EST. USD / AÑO</span>
-                    <DollarSign className="absolute -bottom-2 -right-2 sm:-bottom-4 sm:-right-4 w-12 h-12 sm:w-16 sm:h-16 text-brand-orange/5 group-hover:scale-110 transition-transform" />
+                    <span className="text-[6px] sm:text-[9px] text-brand-orange/60 font-bold mt-1 block">EST. USD / AÑO</span>
                  </div>
               </div>
 
-              {/* Insight Card */}
-              <div className="space-y-3 sm:space-y-4">
-                <div className="flex items-center gap-2">
-                   <Info className="w-3.5 h-3.5 sm:w-4 h-4 text-brand-blue" />
-                   <h4 className="text-[9px] sm:text-[11px] text-slate-500 font-black uppercase tracking-widest">Análisis de Oportunidad</h4>
+              {/* Insight Text - Smaller font on mobile */}
+              <div className="space-y-2 sm:space-y-4">
+                <div className="flex items-center gap-1.5">
+                   <Info className="w-3 h-3 sm:w-4 h-4 text-brand-blue" />
+                   <h4 className="text-[8px] sm:text-[11px] text-slate-500 font-black uppercase tracking-widest">Insight de Oportunidad</h4>
                 </div>
-                <div className="p-5 sm:p-7 rounded-2xl sm:rounded-3xl bg-slate-800/50 border border-white/5 relative overflow-hidden group">
-                  <p className="text-sm sm:text-lg text-slate-300 leading-relaxed font-medium italic">
+                <div className="p-4 sm:p-7 rounded-xl sm:rounded-3xl bg-slate-800/50 border border-white/5 relative overflow-hidden group">
+                  <p className="text-xs sm:text-lg text-slate-300 leading-relaxed font-medium italic">
                     "{activeCountry.insight}"
                   </p>
-                  <MapPin className="absolute -bottom-2 -right-2 sm:-bottom-4 sm:-right-4 w-14 h-14 sm:w-20 sm:h-20 text-brand-blue/5 -rotate-12 group-hover:scale-125 transition-transform duration-1000" />
+                  <MapPin className="absolute -bottom-2 -right-2 w-10 h-10 sm:w-20 sm:h-20 text-brand-blue/5 -rotate-12" />
                 </div>
               </div>
             </motion.div>
           </AnimatePresence>
         </div>
 
-        {/* Inferior: El "Slider" Control & CTA */}
-        <div className="p-4 sm:p-6 bg-slate-950 border-t border-white/5 space-y-4">
+        {/* Bottom Control Section */}
+        <div className="p-3 sm:p-6 bg-slate-950 border-t border-white/5 space-y-3">
            <div className="flex items-center justify-between">
-              <div className="flex gap-3">
+              <div className="flex gap-2">
                  <button 
                    onClick={handlePrev}
-                   className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl sm:rounded-2xl bg-slate-800 hover:bg-brand-blue transition-all flex items-center justify-center group"
+                   className="w-9 h-9 sm:w-12 sm:h-12 rounded-lg sm:rounded-2xl bg-slate-800 hover:bg-brand-blue transition-all flex items-center justify-center"
                  >
-                   <ChevronLeft className="w-4 h-4 sm:w-5 h-5 text-white group-hover:-translate-x-1 transition-transform" />
+                   <ChevronLeft className="w-4 h-4 sm:w-5 h-5 text-white" />
                  </button>
                  <button 
                    onClick={handleNext}
-                   className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl sm:rounded-2xl bg-slate-800 hover:bg-brand-blue transition-all flex items-center justify-center group"
+                   className="w-9 h-9 sm:w-12 sm:h-12 rounded-lg sm:rounded-2xl bg-slate-800 hover:bg-brand-blue transition-all flex items-center justify-center"
                  >
-                   <ChevronRight className="w-4 h-4 sm:w-5 h-5 text-white group-hover:translate-x-1 transition-transform" />
+                   <ChevronRight className="w-4 h-4 sm:w-5 h-5 text-white" />
                  </button>
               </div>
 
               <div className="text-right">
-                 <div className="text-[8px] sm:text-[10px] text-slate-500 font-black uppercase tracking-widest mb-1">Navegación</div>
+                 <div className="text-[7px] sm:text-[10px] text-slate-500 font-bold uppercase tracking-widest mb-0.5">Foco Actual</div>
                  <div className="flex gap-1 justify-end">
                     {GLOBAL_DATASET.map((_, i) => (
                       <div 
@@ -299,9 +291,9 @@ export const GlobalImpactGlobe: React.FC = () => {
               </div>
            </div>
 
-           <button className="w-full py-4 sm:py-5 bg-brand-blue hover:bg-brand-blue/90 text-white text-[10px] sm:text-xs font-black uppercase tracking-widest rounded-xl sm:rounded-2xl shadow-xl shadow-brand-blue/20 flex items-center justify-center gap-2 sm:gap-3 group active:scale-95 transition-transform">
-              <Zap className="w-3.5 h-3.5 sm:w-4 h-4 text-brand-orange animate-pulse" />
-              Solicitar Auditoría para {activeCountry.name}
+           <button className="w-full py-3 sm:py-5 bg-brand-blue hover:bg-brand-blue/90 text-white text-[9px] sm:text-xs font-black uppercase tracking-widest rounded-xl shadow-lg shadow-brand-blue/10 flex items-center justify-center gap-2 group active:scale-95">
+              <Zap className="w-3 h-3 sm:w-4 h-4 text-brand-orange animate-pulse" />
+              Auditoría para {activeCountry.name}
            </button>
         </div>
 
