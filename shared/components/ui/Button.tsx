@@ -1,7 +1,9 @@
-import React from 'react';
-import { motion } from 'framer-motion';
 
-interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+import React from 'react';
+import { motion, HTMLMotionProps } from 'framer-motion';
+
+// Use HTMLMotionProps to ensure compatibility with framer-motion properties
+interface ButtonProps extends HTMLMotionProps<"button"> {
   variant?: 'primary' | 'secondary' | 'outline';
   glow?: boolean;
 }
