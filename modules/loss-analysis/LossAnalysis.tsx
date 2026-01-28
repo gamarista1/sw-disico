@@ -66,7 +66,7 @@ const renderActiveShape = (props: any) => {
         cx={cx}
         cy={cy}
         innerRadius={innerRadius}
-        outerRadius={(outerRadius || 0) + 8}
+        outerRadius={(outerRadius || 0) + 6}
         startAngle={startAngle}
         endAngle={endAngle}
         fill={fill}
@@ -84,7 +84,7 @@ export const LossAnalysis: React.FC = () => {
   const [windowWidth, setWindowWidth] = useState(typeof window !== 'undefined' ? window.innerWidth : 1024);
 
   // Offset dinámico para el slider de regiones
-  const sliderOffset = useMemo(() => (windowWidth < 1024 ? 130 : 170), [windowWidth]);
+  const sliderOffset = useMemo(() => (windowWidth < 1024 ? 130 : 160), [windowWidth]);
 
   useEffect(() => {
     const handleResize = () => setWindowWidth(window.innerWidth);
@@ -163,7 +163,7 @@ export const LossAnalysis: React.FC = () => {
               Las pérdidas no técnicas (NTL) representan miles de millones en ingresos no facturados. SW DISICO utiliza IA para identificar estas anomalías con precisión milimétrica.
             </motion.p>
 
-            <div className="flex flex-wrap gap-4 pt-6">
+            <div className="flex flex-wrap gap-4 pt-4 lg:pt-6">
               <button 
                 onClick={() => setActiveModal('causes')}
                 className="px-6 py-2.5 rounded-lg border border-brand-blue/40 text-white font-medium hover:bg-brand-blue/10 transition-all flex items-center gap-2 group text-sm lg:text-base"
@@ -185,18 +185,18 @@ export const LossAnalysis: React.FC = () => {
             initial={{ opacity: 0, scale: 0.95 }}
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true }}
-            className="bg-slate-900/40 backdrop-blur-2xl border border-white/5 rounded-3xl p-6 lg:p-12 shadow-2xl relative lg:self-center h-fit w-full"
+            className="bg-slate-900/40 backdrop-blur-2xl border border-white/5 rounded-3xl p-6 lg:p-8 shadow-2xl relative lg:self-center h-fit w-full max-w-2xl mx-auto"
           >
             <div className="flex flex-col items-center">
               
-              <div className="w-full flex justify-center items-center h-48 lg:h-64 relative mb-6">
-                <PieChart width={windowWidth < 640 ? 240 : 300} height={windowWidth < 640 ? 200 : 256}>
+              <div className="w-full flex justify-center items-center h-48 lg:h-52 relative mb-4 lg:mb-6">
+                <PieChart width={windowWidth < 640 ? 240 : 280} height={windowWidth < 640 ? 200 : 240}>
                   <Pie
                     data={chartData}
                     cx="50%"
                     cy="50%"
-                    innerRadius={windowWidth < 640 ? 55 : 70}
-                    outerRadius={windowWidth < 640 ? 75 : 95}
+                    innerRadius={windowWidth < 640 ? 55 : 65}
+                    outerRadius={windowWidth < 640 ? 75 : 85}
                     paddingAngle={4}
                     dataKey="value"
                     stroke="none"
@@ -228,7 +228,7 @@ export const LossAnalysis: React.FC = () => {
                 </PieChart>
               </div>
 
-              <div className="w-full relative pb-6" onMouseEnter={() => setIsPaused(true)} onMouseLeave={() => setIsPaused(false)}>
+              <div className="w-full relative pb-4 lg:pb-6" onMouseEnter={() => setIsPaused(true)} onMouseLeave={() => setIsPaused(false)}>
                 <div className="flex items-center justify-center gap-2 text-[9px] font-bold text-slate-500 uppercase tracking-[0.2em] mb-4">
                   <MapPin className="w-3 h-3 text-brand-orange" />
                   <span>Referencia Regional Comparativa</span>
@@ -237,19 +237,19 @@ export const LossAnalysis: React.FC = () => {
                 <div className="absolute left-0 right-0 top-[45%] -translate-y-1/2 flex justify-between px-0 z-30 pointer-events-none">
                   <button 
                     onClick={prevRegion}
-                    className="p-2 lg:p-3 rounded-full bg-slate-800/80 border border-white/10 hover:bg-brand-blue hover:border-white/20 transition-all pointer-events-auto shadow-lg"
+                    className="p-2 lg:p-2.5 rounded-full bg-slate-800/80 border border-white/10 hover:bg-brand-blue hover:border-white/20 transition-all pointer-events-auto shadow-lg"
                   >
                     <ChevronLeft className="w-4 h-4 text-white" />
                   </button>
                   <button 
                     onClick={nextRegion}
-                    className="p-2 lg:p-3 rounded-full bg-slate-800/80 border border-white/10 hover:bg-brand-blue hover:border-white/20 transition-all pointer-events-auto shadow-lg"
+                    className="p-2 lg:p-2.5 rounded-full bg-slate-800/80 border border-white/10 hover:bg-brand-blue hover:border-white/20 transition-all pointer-events-auto shadow-lg"
                   >
                     <ChevronRight className="w-4 h-4 text-white" />
                   </button>
                 </div>
 
-                <div className="relative h-40 lg:h-44 flex items-center justify-center overflow-visible w-full">
+                <div className="relative h-40 lg:h-36 flex items-center justify-center overflow-visible w-full">
                   <div className="relative w-full h-full flex items-center justify-center">
                     {REGIONS.map((region, idx) => {
                       const distance = idx - currentIndex;
@@ -274,18 +274,18 @@ export const LossAnalysis: React.FC = () => {
                           className="absolute cursor-pointer"
                           onClick={() => setCurrentIndex(idx)}
                         >
-                          <div className={`flex flex-col items-center p-4 lg:p-5 rounded-2xl border transition-all duration-500 min-w-[120px] lg:min-w-[145px] ${
+                          <div className={`flex flex-col items-center p-4 lg:p-4 rounded-2xl border transition-all duration-500 min-w-[120px] lg:min-w-[140px] ${
                             isActive 
                               ? 'bg-brand-blue/30 border-brand-blue/80 shadow-[0_20px_40px_rgba(48,103,126,0.3)] backdrop-blur-md' 
                               : 'bg-white/5 border-white/5'
                           }`}>
-                            <div className="relative w-10 h-7 lg:w-14 lg:h-9 mb-2 lg:mb-3 overflow-hidden rounded shadow-md border border-white/10">
+                            <div className="relative w-10 h-7 lg:w-12 lg:h-8 mb-2 lg:mb-2 overflow-hidden rounded shadow-md border border-white/10">
                               <img src={region.flag} alt={region.name} className="w-full h-full object-cover" />
                             </div>
-                            <span className={`text-[10px] lg:text-[12px] font-bold uppercase tracking-wider mb-1 ${isActive ? 'text-white' : 'text-slate-500'}`}>
+                            <span className={`text-[10px] lg:text-[11px] font-bold uppercase tracking-wider mb-1 ${isActive ? 'text-white' : 'text-slate-500'}`}>
                               {region.name}
                             </span>
-                            <span className={`text-[8px] lg:text-[10px] font-mono font-bold ${isActive ? 'text-brand-orange' : 'text-slate-600'}`}>
+                            <span className={`text-[8px] lg:text-[9px] font-mono font-bold ${isActive ? 'text-brand-orange' : 'text-slate-600'}`}>
                               {region.label}
                             </span>
                           </div>
@@ -308,19 +308,19 @@ export const LossAnalysis: React.FC = () => {
                 </div>
               </div>
 
-              <div className="text-center mt-4 space-y-1">
+              <div className="text-center mt-2 space-y-1">
                 <span className="text-slate-500 text-[9px] lg:text-[10px] font-bold uppercase tracking-[0.2em]">Impacto Económico Estimado</span>
                 <motion.div 
                   key={percentage}
                   initial={{ y: 5, opacity: 0 }}
                   animate={{ y: 0, opacity: 1 }}
-                  className="text-xl lg:text-3xl font-mono font-bold text-[#EF4444] drop-shadow-[0_0_12px_rgba(239,68,68,0.2)]"
+                  className="text-xl lg:text-2xl font-mono font-bold text-[#EF4444] drop-shadow-[0_0_12px_rgba(239,68,68,0.2)]"
                 >
                   {estimatedLoss} <span className="text-[10px] lg:text-xs font-sans font-bold text-slate-500">USD/año</span>
                 </motion.div>
               </div>
 
-              <p className="text-[8px] lg:text-[9px] text-slate-600 italic leading-relaxed pt-8 lg:pt-10 font-medium max-w-[280px] lg:max-w-[320px] text-center">
+              <p className="text-[8px] lg:text-[9px] text-slate-600 italic leading-relaxed pt-6 lg:pt-6 font-medium max-w-[280px] lg:max-w-[320px] text-center">
                 * Estimación técnica basada en benchmark de mercado y volumen de inyección regional promediado.
               </p>
             </div>
