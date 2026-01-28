@@ -44,6 +44,8 @@ const colorScale = scaleLinear<string>()
   .domain([0, 10, 20, 60])
   .range(["#30677E", "#30677E", "#F48423", "#EF4444"]);
 
+const BRAND_ORANGE_ACTIVE = "#D24E1A";
+
 export const GlobalImpactGlobe: React.FC = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [rotation, setRotation] = useState<[number, number, number]>([-75, -5, 0]);
@@ -113,12 +115,17 @@ export const GlobalImpactGlobe: React.FC = () => {
                     <Geography
                       key={geo.rsmKey}
                       geography={geo}
-                      fill={match ? colorScale(match.loss) : "#111827"}
+                      fill={isActive ? BRAND_ORANGE_ACTIVE : (match ? colorScale(match.loss) : "#111827")}
                       stroke={isActive ? "#ffffff" : "#030712"}
                       strokeWidth={isActive ? 1.5 : 0.2}
                       style={{
                         default: { outline: 'none', transition: 'all 600ms cubic-bezier(0.23, 1, 0.32, 1)' },
-                        hover: { outline: 'none', cursor: match ? 'pointer' : 'default' },
+                        hover: { 
+                          fill: isActive ? BRAND_ORANGE_ACTIVE : (match ? "#4a8ca8" : "#111827"),
+                          outline: 'none', 
+                          cursor: match ? 'pointer' : 'default' 
+                        },
+                        pressed: { outline: 'none' }
                       }}
                       onClick={() => {
                         if (match) {
