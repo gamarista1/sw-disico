@@ -2,38 +2,45 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { AlertTriangle, Globe, Activity, X, Info, MapPin, ChevronLeft, ChevronRight, Zap } from 'lucide-react';
 import { PieChart, Pie, Cell, Label, Sector } from 'recharts';
+import { GlobalImpactGlobe } from './GlobalImpactGlobe';
 
 interface ModalProps {
   isOpen: boolean;
   onClose: () => void;
   title: string;
   children: React.ReactNode;
+  fullWidth?: boolean;
 }
 
-const Modal: React.FC<ModalProps> = ({ isOpen, onClose, title, children }) => (
+const Modal: React.FC<ModalProps> = ({ isOpen, onClose, title, children, fullWidth = false }) => (
   <AnimatePresence>
     {isOpen && (
-      <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+      <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           onClick={onClose}
-          className="absolute inset-0 bg-slate-950/80 backdrop-blur-md"
+          className="absolute inset-0 bg-slate-950/90 backdrop-blur-xl"
         />
         <motion.div
           initial={{ opacity: 0, scale: 0.9, y: 20 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.9, y: 20 }}
-          className="relative w-full max-w-lg bg-slate-900 border border-brand-blue/30 rounded-2xl p-8 shadow-2xl z-10"
+          className={`relative w-full ${fullWidth ? 'max-w-6xl' : 'max-w-lg'} bg-slate-900 border border-brand-blue/30 rounded-3xl overflow-hidden shadow-2xl z-10`}
         >
-          <div className="flex justify-between items-center mb-6">
-            <h3 className="text-xl font-bold text-white">{title}</h3>
-            <button onClick={onClose} className="p-2 hover:bg-white/5 rounded-full transition-colors">
-              <X className="w-5 h-5 text-gray-400" />
+          <div className="flex justify-between items-center p-6 border-b border-white/5 bg-slate-900/50 backdrop-blur-md">
+            <div className="flex items-center gap-3">
+              <div className="w-8 h-8 rounded-lg bg-brand-blue/10 flex items-center justify-center">
+                <Globe className="w-5 h-5 text-brand-blue" />
+              </div>
+              <h3 className="text-xl font-bold text-white tracking-tight">{title}</h3>
+            </div>
+            <button onClick={onClose} className="p-2 hover:bg-white/5 rounded-full transition-colors group">
+              <X className="w-5 h-5 text-gray-400 group-hover:text-white transition-colors" />
             </button>
           </div>
-          <div className="text-slate-300 leading-relaxed">
+          <div className="text-slate-300">
             {children}
           </div>
         </motion.div>
@@ -75,13 +82,11 @@ export const LossAnalysis: React.FC = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
 
-  // Data for Recharts Pie
   const chartData = useMemo(() => [
     { name: 'Pérdidas', value: percentage, fill: '#EF4444' },
     { name: 'Operación', value: 100 - percentage, fill: '#30677E' },
   ], [percentage]);
 
-  // Autoplay Logic
   useEffect(() => {
     if (isPaused) return;
     const interval = setInterval(() => {
@@ -90,7 +95,6 @@ export const LossAnalysis: React.FC = () => {
     return () => clearInterval(interval);
   }, [isPaused]);
 
-  // Sync percentage with active carousel item
   useEffect(() => {
     setPercentage(REGIONS[currentIndex].value);
   }, [currentIndex]);
@@ -152,16 +156,16 @@ export const LossAnalysis: React.FC = () => {
             <div className="flex flex-wrap gap-4 pt-6">
               <button 
                 onClick={() => setActiveModal('causes')}
-                className="px-6 py-2.5 rounded-lg border border-brand-blue/40 text-white font-medium hover:bg-brand-blue/10 transition-all flex items-center gap-2"
+                className="px-6 py-2.5 rounded-lg border border-brand-blue/40 text-white font-medium hover:bg-brand-blue/10 transition-all flex items-center gap-2 group"
               >
-                <Info className="w-4 h-4 text-brand-blue" />
+                <Info className="w-4 h-4 text-brand-blue group-hover:scale-110 transition-transform" />
                 Causas Principales
               </button>
               <button 
                 onClick={() => setActiveModal('regional')}
-                className="px-6 py-2.5 rounded-lg border border-brand-blue/40 text-white font-medium hover:bg-brand-blue/10 transition-all flex items-center gap-2"
+                className="px-6 py-2.5 rounded-lg border border-brand-orange/40 text-white font-medium hover:bg-brand-orange/10 transition-all flex items-center gap-2 group"
               >
-                <Globe className="w-4 h-4 text-brand-blue" />
+                <Globe className="w-4 h-4 text-brand-orange group-hover:rotate-12 transition-transform" />
                 Impacto Global
               </button>
             </div>
@@ -175,7 +179,6 @@ export const LossAnalysis: React.FC = () => {
           >
             <div className="flex flex-col items-center">
               
-              {/* 1. Pie Chart (RECHARTS) - Fixed Sizing for reliability */}
               <div className="w-full flex justify-center items-center h-64 relative mb-6">
                 <PieChart width={300} height={256}>
                   <Pie
@@ -215,7 +218,6 @@ export const LossAnalysis: React.FC = () => {
                 </PieChart>
               </div>
 
-              {/* 2. Carousel Selector */}
               <div className="w-full relative pb-6" onMouseEnter={() => setIsPaused(true)} onMouseLeave={() => setIsPaused(false)}>
                 <div className="flex items-center justify-center gap-2 text-[9px] font-bold text-slate-500 uppercase tracking-[0.2em] mb-4">
                   <MapPin className="w-3 h-3 text-brand-orange" />
@@ -283,7 +285,6 @@ export const LossAnalysis: React.FC = () => {
                   </div>
                 </div>
                 
-                {/* Dots indicator */}
                 <div className="flex justify-center gap-2 mt-4">
                   {REGIONS.map((_, idx) => (
                     <button
@@ -297,7 +298,6 @@ export const LossAnalysis: React.FC = () => {
                 </div>
               </div>
 
-              {/* 3. Numerical Indicator */}
               <div className="text-center mt-4 space-y-1">
                 <span className="text-slate-500 text-[10px] font-bold uppercase tracking-[0.2em]">Impacto Económico Estimado</span>
                 <motion.div 
@@ -318,67 +318,51 @@ export const LossAnalysis: React.FC = () => {
         </div>
       </div>
 
-      {/* Modals Implementation */}
       <Modal 
         isOpen={activeModal === 'causes'} 
         onClose={() => setActiveModal(null)} 
         title="Naturaleza de las Pérdidas NTL"
       >
-        <ul className="space-y-4">
-          <li className="flex gap-4 p-4 rounded-xl bg-white/5 border border-white/5">
-             <div className="w-10 h-10 rounded-lg bg-brand-orange/10 flex items-center justify-center shrink-0">
-               <AlertTriangle className="w-5 h-5 text-brand-orange" />
-             </div>
-             <div>
-               <h4 className="text-white font-bold text-sm">Manipulación Directa</h4>
-               <p className="text-xs text-slate-400 mt-1">Intervención física en sistemas de medición para sub-registrar el consumo real.</p>
-             </div>
-          </li>
-          <li className="flex gap-4 p-4 rounded-xl bg-white/5 border border-white/5">
-             <div className="w-10 h-10 rounded-lg bg-brand-blue/10 flex items-center justify-center shrink-0">
-               <Zap className="w-5 h-5 text-brand-blue" />
-             </div>
-             <div>
-               <h4 className="text-white font-bold text-sm">Derivaciones Ilegales</h4>
-               <p className="text-xs text-slate-400 mt-1">Conexiones a la red de baja tensión que evitan completamente los puntos de medida.</p>
-             </div>
-          </li>
-          <li className="flex gap-4 p-4 rounded-xl bg-white/5 border border-white/5">
-             <div className="w-10 h-10 rounded-lg bg-slate-800 flex items-center justify-center shrink-0">
-               <Activity className="w-5 h-5 text-slate-400" />
-             </div>
-             <div>
-               <h4 className="text-white font-bold text-sm">Ineficiencias Administrativas</h4>
-               <p className="text-xs text-slate-400 mt-1">Errores en el censo de carga o fallos en los procesos de facturación cíclica.</p>
-             </div>
-          </li>
-        </ul>
+        <div className="p-6">
+          <ul className="space-y-4">
+            <li className="flex gap-4 p-4 rounded-xl bg-white/5 border border-white/5">
+               <div className="w-10 h-10 rounded-lg bg-brand-orange/10 flex items-center justify-center shrink-0">
+                 <AlertTriangle className="w-5 h-5 text-brand-orange" />
+               </div>
+               <div>
+                 <h4 className="text-white font-bold text-sm">Manipulación Directa</h4>
+                 <p className="text-xs text-slate-400 mt-1">Intervención física en sistemas de medición para sub-registrar el consumo real.</p>
+               </div>
+            </li>
+            <li className="flex gap-4 p-4 rounded-xl bg-white/5 border border-white/5">
+               <div className="w-10 h-10 rounded-lg bg-brand-blue/10 flex items-center justify-center shrink-0">
+                 <Zap className="w-5 h-5 text-brand-blue" />
+               </div>
+               <div>
+                 <h4 className="text-white font-bold text-sm">Derivaciones Ilegales</h4>
+                 <p className="text-xs text-slate-400 mt-1">Conexiones a la red de baja tensión que evitan completamente los puntos de medida.</p>
+               </div>
+            </li>
+            <li className="flex gap-4 p-4 rounded-xl bg-white/5 border border-white/5">
+               <div className="w-10 h-10 rounded-lg bg-slate-800 flex items-center justify-center shrink-0">
+                 <Activity className="w-5 h-5 text-slate-400" />
+               </div>
+               <div>
+                 <h4 className="text-white font-bold text-sm">Ineficiencias Administrativas</h4>
+                 <p className="text-xs text-slate-400 mt-1">Errores en el censo de carga o fallos en los procesos de facturación cíclica.</p>
+               </div>
+            </li>
+          </ul>
+        </div>
       </Modal>
 
       <Modal 
         isOpen={activeModal === 'regional'} 
         onClose={() => setActiveModal(null)} 
-        title="Contexto Global de Pérdidas"
+        title="Diagnóstico Planetario Interactivo"
+        fullWidth
       >
-        <div className="space-y-6">
-          <p className="text-sm">Las pérdidas no técnicas son el principal obstáculo para la sostenibilidad financiera de las utilities:</p>
-          <div className="grid grid-cols-2 gap-3">
-            {REGIONS.map(r => (
-              <div key={r.name} className="p-3 bg-white/5 rounded-xl border border-white/10 flex items-center gap-3">
-                <img src={r.flag} className="w-6 h-4 rounded shadow-sm" alt="" />
-                <div className="flex flex-col">
-                  <span className="text-[10px] text-slate-500 uppercase font-bold">{r.name}</span>
-                  <span className="text-sm text-white font-mono font-bold">{r.label}</span>
-                </div>
-              </div>
-            ))}
-          </div>
-          <div className="p-4 bg-brand-orange/10 rounded-xl border border-brand-orange/20">
-            <p className="text-xs text-brand-orange font-bold leading-relaxed">
-              La implementación de SW DISICO permite recuperar hasta el 60% de estos ingresos perdidos en el primer año de operación activa.
-            </p>
-          </div>
-        </div>
+        <GlobalImpactGlobe />
       </Modal>
     </section>
   );
