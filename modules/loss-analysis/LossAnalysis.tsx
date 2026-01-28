@@ -1,6 +1,21 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { AlertTriangle, Globe, Activity, X, Info, MapPin, ChevronLeft, ChevronRight, Zap } from 'lucide-react';
+import { 
+  AlertTriangle, 
+  Globe, 
+  Activity, 
+  X, 
+  Info, 
+  MapPin, 
+  ChevronLeft, 
+  ChevronRight, 
+  Zap,
+  Settings2,
+  EyeOff,
+  Banknote,
+  Users,
+  CheckCircle2
+} from 'lucide-react';
 import { PieChart, Pie, Cell, Label, Sector } from 'recharts';
 import { GlobalImpactGlobe } from './GlobalImpactGlobe';
 
@@ -58,6 +73,74 @@ const REGIONS = [
   { name: 'LatAm', flag: 'https://flagcdn.com/w320/ar.png', value: 12, label: '9% - 12%' },
 ];
 
+const NTL_CAUSES = [
+  {
+    title: "Fallas y Obsolescencia",
+    subtitle: "Infraestructura",
+    icon: Settings2,
+    colorClass: "text-amber-400",
+    bgClass: "bg-amber-400/10",
+    description: "Deficiencias técnicas sin intención fraudulenta.",
+    points: [
+      "Averías y equipos rotos (medidores detenidos).",
+      "Obsolescencia tecnológica (pérdida de precisión).",
+      "Equipos mal configurados por el operador."
+    ]
+  },
+  {
+    title: "Consumo No Medido",
+    subtitle: "Ausencia",
+    icon: EyeOff,
+    colorClass: "text-slate-400",
+    bgClass: "bg-slate-400/10",
+    description: "Energía entregada sin proceso de medición individual.",
+    points: [
+      "Alumbrado público y semáforos estimados.",
+      "Asentamientos informales (conexiones directas).",
+      "Suministros temporales (ferias, eventos)."
+    ]
+  },
+  {
+    title: "Pérdidas Accidentales",
+    subtitle: "Operativas",
+    icon: AlertTriangle,
+    colorClass: "text-yellow-500",
+    bgClass: "bg-yellow-500/10",
+    description: "Errores involuntarios en la instalación física.",
+    points: [
+      "Errores de conexión (fases invertidas).",
+      "Fallos en elementos del circuito.",
+      "Errores operativos, no fraudulentos."
+    ]
+  },
+  {
+    title: "Naturaleza Financiera",
+    subtitle: "Cartera",
+    icon: Banknote,
+    colorClass: "text-red-400",
+    bgClass: "bg-red-400/10",
+    description: "Energía facturada pero no cobrada.",
+    points: [
+      "Impago y Morosidad crítica.",
+      "Cultura del no pago arraigada.",
+      "Crisis económicas (inflación/desempleo)."
+    ]
+  },
+  {
+    title: "Socioeconómica",
+    subtitle: "Causa Raíz",
+    icon: Users,
+    colorClass: "text-blue-400",
+    bgClass: "bg-blue-400/10",
+    description: "Factores estructurales y políticos.",
+    points: [
+      "Percepción de energía como derecho no mercantil.",
+      "Clientelismo político (permisividad electoral).",
+      "Baja calidad del servicio (desincentivo de pago)."
+    ]
+  }
+];
+
 const renderActiveShape = (props: any) => {
   const { cx, cy, innerRadius, outerRadius, startAngle, endAngle, fill } = props;
   return (
@@ -80,10 +163,10 @@ export const LossAnalysis: React.FC = () => {
   const [percentage, setPercentage] = useState(20.0);
   const [activeModal, setActiveModal] = useState<string | null>(null);
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [currentCause, setCurrentCause] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
   const [windowWidth, setWindowWidth] = useState(typeof window !== 'undefined' ? window.innerWidth : 1024);
 
-  // Offset dinámico para el slider de regiones
   const sliderOffset = useMemo(() => (windowWidth < 1024 ? 130 : 160), [windowWidth]);
 
   useEffect(() => {
@@ -119,6 +202,9 @@ export const LossAnalysis: React.FC = () => {
 
   const nextRegion = () => setCurrentIndex((prev) => (prev + 1) % REGIONS.length);
   const prevRegion = () => setCurrentIndex((prev) => (prev - 1 + REGIONS.length) % REGIONS.length);
+
+  const nextCause = () => setCurrentCause((prev) => (prev + 1) % NTL_CAUSES.length);
+  const prevCause = () => setCurrentCause((prev) => (prev - 1 + NTL_CAUSES.length) % NTL_CAUSES.length);
 
   return (
     <section id="loss-analysis" className="relative py-24 bg-slate-950 overflow-hidden transition-colors duration-500">
@@ -333,36 +419,94 @@ export const LossAnalysis: React.FC = () => {
         onClose={() => setActiveModal(null)} 
         title="Naturaleza de las Pérdidas NTL"
       >
-        <div className="p-6">
-          <ul className="space-y-4">
-            <li className="flex gap-4 p-4 rounded-xl bg-white/5 border border-white/5">
-               <div className="w-10 h-10 rounded-lg bg-brand-orange/10 flex items-center justify-center shrink-0">
-                 <AlertTriangle className="w-5 h-5 text-brand-orange" />
-               </div>
-               <div>
-                 <h4 className="text-white font-bold text-sm">Manipulación Directa</h4>
-                 <p className="text-xs text-slate-400 mt-1">Intervención física en sistemas de medición para sub-registrar el consumo real.</p>
-               </div>
-            </li>
-            <li className="flex gap-4 p-4 rounded-xl bg-white/5 border border-white/5">
-               <div className="w-10 h-10 rounded-lg bg-brand-blue/10 flex items-center justify-center shrink-0">
-                 <Zap className="w-5 h-5 text-brand-blue" />
-               </div>
-               <div>
-                 <h4 className="text-white font-bold text-sm">Derivaciones Ilegales</h4>
-                 <p className="text-xs text-slate-400 mt-1">Conexiones a la red de baja tensión que evitan completamente los puntos de medida.</p>
-               </div>
-            </li>
-            <li className="flex gap-4 p-4 rounded-xl bg-white/5 border border-white/5">
-               <div className="w-10 h-10 rounded-lg bg-slate-800 flex items-center justify-center shrink-0">
-                 <Activity className="w-5 h-5 text-slate-400" />
-               </div>
-               <div>
-                 <h4 className="text-white font-bold text-sm">Ineficiencias Administrativas</h4>
-                 <p className="text-xs text-slate-400 mt-1">Errores en el censo de carga o fallos en los procesos de facturación cíclica.</p>
-               </div>
-            </li>
-          </ul>
+        <div className="relative p-6 min-h-[400px] sm:min-h-[350px] flex flex-col justify-between overflow-hidden">
+          {/* Slider Content */}
+          <div className="relative flex-1">
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={currentCause}
+                initial={{ opacity: 0, x: 50 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -50 }}
+                transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                className="w-full h-full flex flex-col gap-6"
+              >
+                {/* Header: Icon + Info */}
+                <div className="flex items-start gap-4 p-4 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-sm">
+                  <div className={`w-14 h-14 rounded-xl ${NTL_CAUSES[currentCause].bgClass} flex items-center justify-center shrink-0 shadow-lg`}>
+                    {React.createElement(NTL_CAUSES[currentCause].icon, { 
+                      className: `w-8 h-8 ${NTL_CAUSES[currentCause].colorClass}` 
+                    })}
+                  </div>
+                  <div>
+                    <span className="text-[10px] font-black uppercase tracking-widest text-slate-500 block mb-0.5">
+                      {NTL_CAUSES[currentCause].subtitle}
+                    </span>
+                    <h4 className="text-xl font-bold text-white leading-tight">
+                      {NTL_CAUSES[currentCause].title}
+                    </h4>
+                    <p className="text-sm text-slate-400 mt-1 italic">
+                      {NTL_CAUSES[currentCause].description}
+                    </p>
+                  </div>
+                </div>
+
+                {/* Body: Points */}
+                <div className="flex-1 space-y-3 px-2">
+                  <h5 className="text-[10px] font-bold text-brand-blue uppercase tracking-widest mb-2 flex items-center gap-2">
+                    <Zap className="w-3 h-3" /> Puntos Clave
+                  </h5>
+                  {NTL_CAUSES[currentCause].points.map((point, i) => (
+                    <motion.div 
+                      key={i}
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: 0.1 + (i * 0.1) }}
+                      className="flex gap-3 items-center group"
+                    >
+                      <div className="w-1.5 h-1.5 rounded-full bg-brand-orange shrink-0 group-hover:scale-125 transition-transform" />
+                      <p className="text-sm text-slate-300 font-medium">{point}</p>
+                    </motion.div>
+                  ))}
+                </div>
+              </motion.div>
+            </AnimatePresence>
+          </div>
+
+          {/* Navigation Controls */}
+          <div className="mt-8 pt-6 border-t border-white/5 flex items-center justify-between">
+            <div className="flex gap-2">
+              <button 
+                onClick={prevCause}
+                className="w-10 h-10 rounded-xl bg-slate-800 hover:bg-brand-blue transition-all flex items-center justify-center group"
+              >
+                <ChevronLeft className="w-5 h-5 text-white group-hover:-translate-x-0.5 transition-transform" />
+              </button>
+              <button 
+                onClick={nextCause}
+                className="w-10 h-10 rounded-xl bg-slate-800 hover:bg-brand-blue transition-all flex items-center justify-center group"
+              >
+                <ChevronRight className="w-5 h-5 text-white group-hover:translate-x-0.5 transition-transform" />
+              </button>
+            </div>
+
+            <div className="text-right">
+              <span className="text-[10px] text-slate-500 font-bold uppercase tracking-widest mb-1.5 block">
+                Causa {currentCause + 1} de {NTL_CAUSES.length}
+              </span>
+              <div className="flex gap-1.5 justify-end">
+                {NTL_CAUSES.map((_, i) => (
+                  <button
+                    key={i}
+                    onClick={() => setCurrentCause(i)}
+                    className={`h-1 rounded-full transition-all duration-300 ${
+                      i === currentCause ? 'w-6 bg-brand-orange' : 'w-1.5 bg-slate-800'
+                    }`}
+                  />
+                ))}
+              </div>
+            </div>
+          </div>
         </div>
       </Modal>
 
