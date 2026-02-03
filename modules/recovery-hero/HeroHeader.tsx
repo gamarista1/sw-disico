@@ -1,8 +1,48 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { ArrowRight, Zap, TrendingUp, ShieldCheck } from 'lucide-react';
 import { Button } from '../../shared/components/ui/Button';
 import Lightning from '../../shared/components/ui/Lightning';
+
+const AudioVisualizer: React.FC = () => {
+  const [isHovered, setIsHovered] = useState(false);
+  const bars = [40, 65, 45, 70, 85, 60, 75, 90, 65, 80];
+
+  return (
+    <div 
+      onMouseEnter={() => setIsHovered(true)} 
+      onMouseLeave={() => setIsHovered(false)}
+      className="h-32 flex items-end justify-between gap-1.5 px-1 group/chart"
+    >
+      {bars.map((h, i) => (
+        <motion.div 
+          key={i}
+          initial={{ height: 0 }}
+          animate={{ height: `${h}%` }}
+          whileHover={{ 
+            height: `${h + 5}%`, 
+            filter: 'brightness(1.2)',
+            transition: { duration: 0.2 }
+          }}
+          transition={{ 
+            duration: 0.6, 
+            delay: 0.8 + (i * 0.08),
+            ease: "easeOut" 
+          }}
+          className={`w-full rounded-t-[2px] cursor-pointer relative group/bar transition-all duration-500 ${
+            isHovered 
+              ? 'bg-gradient-to-t from-orange-600 via-orange-500 to-amber-400 border border-orange-400/50 shadow-[0_0_20px_rgba(249,115,22,0.4)] opacity-100' 
+              : 'bg-gradient-to-t from-brand-blue/40 to-brand-blue opacity-70 border border-transparent'
+          }`}
+        >
+          <div className={`absolute -top-6 left-1/2 -translate-x-1/2 px-1.5 py-0.5 rounded text-[8px] text-white opacity-0 group-hover/bar:opacity-100 transition-opacity font-bold ${isHovered ? 'bg-brand-orange' : 'bg-brand-blue'}`}>
+            {h}%
+          </div>
+        </motion.div>
+      ))}
+    </div>
+  );
+};
 
 export const HeroHeader: React.FC = () => {
   return (
@@ -139,32 +179,8 @@ export const HeroHeader: React.FC = () => {
               </motion.div>
             </div>
 
-            {/* Gráfico de Barras con Interacción individual */}
-            <div className="h-32 flex items-end justify-between gap-1.5 px-1 group/chart">
-              {[40, 65, 45, 70, 85, 60, 75, 90, 65, 80].map((h, i) => (
-                <motion.div 
-                  key={i}
-                  initial={{ height: 0 }}
-                  animate={{ height: `${h}%` }}
-                  whileHover={{ 
-                    height: `${h + 5}%`, 
-                    opacity: 1, 
-                    filter: 'brightness(1.5)',
-                    transition: { duration: 0.2 }
-                  }}
-                  transition={{ 
-                    duration: 0.6, 
-                    delay: 0.8 + (i * 0.08),
-                    ease: "easeOut" 
-                  }}
-                  className="w-full bg-gradient-to-t from-brand-blue/40 to-brand-blue rounded-t-[2px] opacity-70 cursor-pointer relative group/bar"
-                >
-                  <div className="absolute -top-6 left-1/2 -translate-x-1/2 bg-brand-blue px-1.5 py-0.5 rounded text-[8px] text-white opacity-0 group-hover/bar:opacity-100 transition-opacity font-bold">
-                    {h}%
-                  </div>
-                </motion.div>
-              ))}
-            </div>
+            {/* AudioVisualizer Component */}
+            <AudioVisualizer />
 
             {/* Footer del Dashboard */}
             <div className="mt-5 flex justify-between items-center text-[9px] text-gray-500 font-mono tracking-widest border-t border-white/5 pt-3">
