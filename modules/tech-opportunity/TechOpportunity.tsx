@@ -5,54 +5,42 @@ import { ShieldCheck, Activity, Database, LineChart, Cpu, ArrowRight, Zap, Targe
 const NeuralCore = ({ isActive }: { isActive: boolean }) => {
   return (
     <div className="relative w-64 h-64 sm:w-80 sm:h-80 flex items-center justify-center">
-      {/* Glow Base */}
+      {/* Atmósfera de Resplandor Base */}
       <motion.div 
         animate={{ 
           scale: isActive ? [1, 1.2, 1] : [1, 1.05, 1],
-          opacity: isActive ? [0.3, 0.6, 0.3] : [0.2, 0.3, 0.2]
+          opacity: isActive ? [0.4, 0.7, 0.4] : [0.2, 0.4, 0.2],
+          filter: isActive ? 'blur(100px)' : 'blur(80px)'
         }}
         transition={{ duration: 2, repeat: Infinity }}
-        className="absolute inset-0 bg-brand-blue/30 rounded-full blur-[80px]"
+        className="absolute inset-0 bg-brand-blue/30 rounded-full"
       />
       
-      {/* Orbitals */}
-      {[1, 2, 3].map((i) => (
-        <motion.div
-          key={i}
-          animate={{ rotate: i % 2 === 0 ? 360 : -360 }}
-          transition={{ duration: isActive ? 4 / i : 10 / i, repeat: Infinity, ease: "linear" }}
-          className="absolute border border-brand-blue/20 rounded-full"
-          style={{ 
-            width: `${100 - i * 20}%`, 
-            height: `${100 - i * 20}%`,
-            borderStyle: i === 2 ? 'dashed' : 'solid'
-          }}
+      {/* Contenedor de Animación Lottie */}
+      <div className="relative z-10 w-full h-full flex items-center justify-center scale-125 sm:scale-150">
+        {/* @ts-ignore - Componente Web de Lottie */}
+        <dotlottie-wc 
+          src="https://lottie.host/61a0df9f-7237-459a-acd8-afbd1b6d1b3c/UbxvHlTqmg.lottie" 
+          autoplay 
+          loop 
+          style={{ width: '100%', height: '100%' }}
         />
-      ))}
+      </div>
 
-      {/* Center Core */}
-      <motion.div 
-        animate={{ 
-          boxShadow: isActive 
-            ? ["0 0 20px rgba(48,103,126,0.5)", "0 0 60px rgba(48,103,126,0.8)", "0 0 20px rgba(48,103,126,0.5)"]
-            : ["0 0 10px rgba(48,103,126,0.2)", "0 0 20px rgba(48,103,126,0.4)", "0 0 10px rgba(48,103,126,0.2)"]
-        }}
-        transition={{ duration: 1.5, repeat: Infinity }}
-        className="relative w-16 h-16 bg-gradient-to-br from-white via-brand-blue to-slate-900 rounded-2xl flex items-center justify-center z-10 border border-white/20 shadow-inner"
-      >
-        <Cpu className={`w-8 h-8 ${isActive ? 'text-white' : 'text-brand-blue'} transition-colors duration-500`} />
-      </motion.div>
-      
-      {/* Particle Pulses */}
+      {/* Pulsos de Partículas para Feedback de Interacción */}
       {isActive && Array.from({ length: 4 }).map((_, i) => (
         <motion.div
           key={i}
           initial={{ scale: 0.5, opacity: 0 }}
-          animate={{ scale: 2, opacity: [0, 1, 0] }}
+          animate={{ scale: 2.5, opacity: [0, 1, 0] }}
           transition={{ duration: 2, delay: i * 0.5, repeat: Infinity }}
-          className="absolute w-20 h-20 border border-brand-orange/40 rounded-full"
+          className="absolute w-20 h-20 border border-brand-orange/40 rounded-full pointer-events-none"
         />
       ))}
+
+      {/* Anillos HUD Estáticos Decorativos */}
+      <div className="absolute inset-0 border border-white/5 rounded-full scale-110 opacity-20" />
+      <div className="absolute inset-0 border border-white/5 rounded-full scale-125 opacity-10" />
     </div>
   );
 };
@@ -136,7 +124,7 @@ export const TechOpportunity: React.FC = () => {
         </div>
 
         <div className="grid lg:grid-cols-2 gap-20 items-center">
-          {/* Central AI Nucleus */}
+          {/* Central AI Nucleus con Lottie */}
           <div className="flex justify-center relative">
             <NeuralCore isActive={isHeroHovered} />
             {/* HUD Indicators around core */}
