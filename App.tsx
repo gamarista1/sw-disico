@@ -5,6 +5,7 @@ import { TechOpportunity } from './modules/tech-opportunity/TechOpportunity';
 import { TheSolution } from './modules/the-solution/TheSolution';
 import { OperationalProcess } from './modules/operational-process/OperationalProcess';
 import { ResultsROI } from './modules/results-roi/ResultsROI';
+import { CompetitiveAdvantages } from './modules/competitive-advantages/CompetitiveAdvantages';
 
 function App() {
   return (
@@ -20,6 +21,8 @@ function App() {
       <OperationalProcess />
 
       <ResultsROI />
+
+      <CompetitiveAdvantages />
       
       {/* Marcadores para secciones futuras (Screaming Architecture) */}
       <div id="lead-capture"></div>
