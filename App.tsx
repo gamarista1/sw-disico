@@ -2,6 +2,7 @@ import React from 'react';
 import { HeroHeader } from './modules/recovery-hero/HeroHeader';
 import { LossAnalysis } from './modules/loss-analysis/LossAnalysis';
 import { TechOpportunity } from './modules/tech-opportunity/TechOpportunity';
+import { TheSolution } from './modules/the-solution/TheSolution';
 
 function App() {
   return (
@@ -11,9 +12,10 @@ function App() {
       <LossAnalysis />
 
       <TechOpportunity />
+
+      <TheSolution />
       
       {/* Marcadores para secciones futuras (Screaming Architecture) */}
-      <div id="ia-engine"></div>
       <div id="roi-calculator"></div>
       <div id="lead-capture"></div>
     </div>
