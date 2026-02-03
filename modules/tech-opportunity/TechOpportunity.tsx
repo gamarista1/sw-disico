@@ -1,11 +1,83 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence, useScroll, useTransform, useSpring } from 'framer-motion';
-import { ShieldCheck, Activity, Database, LineChart, Cpu, ArrowRight, Zap, Target } from 'lucide-react';
+import { ShieldCheck, Activity, Database, LineChart, Cpu, ArrowRight, Zap, Target, X, Info, CheckCircle2 } from 'lucide-react';
+
+const TechModal = ({ isOpen, onClose, data }: { isOpen: boolean, onClose: () => void, data: any }) => {
+  if (!data) return null;
+
+  return (
+    <AnimatePresence>
+      {isOpen && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={onClose}
+            className="absolute inset-0 bg-slate-950/90 backdrop-blur-xl"
+          />
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9, y: 20 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.9, y: 20 }}
+            className="relative w-full max-w-xl bg-slate-900 border border-brand-blue/30 rounded-3xl overflow-hidden shadow-2xl z-10"
+          >
+            {/* Modal Header */}
+            <div className="flex justify-between items-center p-6 border-b border-white/5 bg-slate-900/50 backdrop-blur-md">
+              <div className="flex items-center gap-3">
+                <div className={`w-10 h-10 rounded-lg bg-brand-blue/10 flex items-center justify-center`}>
+                  <data.icon className="w-6 h-6 text-brand-blue" />
+                </div>
+                <div>
+                  <h3 className="text-lg font-bold text-white tracking-tight leading-none">{data.title}</h3>
+                  <p className="text-[10px] text-brand-blue font-black uppercase tracking-widest mt-1">{data.subtitle}</p>
+                </div>
+              </div>
+              <button onClick={onClose} className="p-2 hover:bg-white/5 rounded-full transition-colors group">
+                <X className="w-5 h-5 text-gray-400 group-hover:text-white transition-colors" />
+              </button>
+            </div>
+
+            {/* Modal Content */}
+            <div className="p-8 space-y-6">
+              <p className="text-slate-300 leading-relaxed text-sm lg:text-base">
+                {data.description}
+              </p>
+
+              {data.tags && (
+                <div className="flex flex-wrap gap-2 pt-2">
+                  {data.tags.map((tag: string, i: number) => (
+                    <span key={i} className="px-3 py-1 rounded-full bg-brand-blue/10 border border-brand-blue/20 text-[10px] font-bold text-brand-blue uppercase tracking-wider">
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+              )}
+
+              {data.items && (
+                <div className="space-y-3 pt-2">
+                  {data.items.map((item: string, i: number) => (
+                    <div key={i} className="flex gap-3 items-start">
+                      <CheckCircle2 className="w-4 h-4 text-brand-orange shrink-0 mt-0.5" />
+                      <p className="text-sm text-slate-300 font-medium">{item}</p>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            {/* Modal Footer decorative */}
+            <div className="h-1 w-full bg-gradient-to-r from-brand-blue via-white/10 to-brand-orange opacity-30" />
+          </motion.div>
+        </div>
+      )}
+    </AnimatePresence>
+  );
+};
 
 const NeuralCore = ({ isActive }: { isActive: boolean }) => {
   return (
     <div className="relative w-64 h-64 sm:w-80 sm:h-80 flex items-center justify-center">
-      {/* Atmósfera de Resplandor Base */}
       <motion.div 
         animate={{ 
           scale: isActive ? [1, 1.2, 1] : [1, 1.05, 1],
@@ -16,9 +88,8 @@ const NeuralCore = ({ isActive }: { isActive: boolean }) => {
         className="absolute inset-0 bg-brand-blue/30 rounded-full"
       />
       
-      {/* Contenedor de Animación Lottie */}
       <div className="relative z-10 w-full h-full flex items-center justify-center scale-125 sm:scale-150">
-        {/* @ts-ignore - Componente Web de Lottie */}
+        {/* @ts-ignore */}
         <dotlottie-wc 
           src="https://lottie.host/61a0df9f-7237-459a-acd8-afbd1b6d1b3c/UbxvHlTqmg.lottie" 
           autoplay 
@@ -27,7 +98,6 @@ const NeuralCore = ({ isActive }: { isActive: boolean }) => {
         />
       </div>
 
-      {/* Pulsos de Partículas para Feedback de Interacción */}
       {isActive && Array.from({ length: 4 }).map((_, i) => (
         <motion.div
           key={i}
@@ -38,14 +108,13 @@ const NeuralCore = ({ isActive }: { isActive: boolean }) => {
         />
       ))}
 
-      {/* Anillos HUD Estáticos Decorativos */}
       <div className="absolute inset-0 border border-white/5 rounded-full scale-110 opacity-20" />
       <div className="absolute inset-0 border border-white/5 rounded-full scale-125 opacity-10" />
     </div>
   );
 };
 
-const InteractiveNode = ({ icon: Icon, title, description, delay = 0 }: any) => {
+const InteractiveNode = ({ icon: Icon, title, description, delay = 0, onClick }: any) => {
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
   const nodeRef = useRef<HTMLDivElement>(null);
 
@@ -67,6 +136,7 @@ const InteractiveNode = ({ icon: Icon, title, description, delay = 0 }: any) => 
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       transition={{ delay }}
+      onClick={onClick}
       className="group relative p-6 bg-slate-900/40 backdrop-blur-xl border border-white/5 rounded-2xl hover:border-brand-blue/50 transition-colors cursor-pointer"
     >
       <div className="absolute inset-0 bg-brand-blue/5 opacity-0 group-hover:opacity-100 transition-opacity rounded-2xl" />
@@ -76,7 +146,6 @@ const InteractiveNode = ({ icon: Icon, title, description, delay = 0 }: any) => 
       <h4 className="text-white font-bold mb-2 group-hover:text-brand-blue transition-colors uppercase tracking-wider text-sm">{title}</h4>
       <p className="text-slate-400 text-xs leading-relaxed">{description}</p>
       
-      {/* Corner Accents */}
       <div className="absolute top-0 right-0 w-4 h-4 border-t border-r border-white/10 rounded-tr-xl group-hover:border-brand-blue/50" />
       <div className="absolute bottom-0 left-0 w-4 h-4 border-b border-l border-white/10 rounded-bl-xl group-hover:border-brand-blue/50" />
     </motion.div>
@@ -85,13 +154,52 @@ const InteractiveNode = ({ icon: Icon, title, description, delay = 0 }: any) => 
 
 export const TechOpportunity: React.FC = () => {
   const [isHeroHovered, setIsHeroHovered] = useState(false);
-  const { scrollYProgress } = useScroll();
-  const yRange = useTransform(scrollYProgress, [0.3, 0.6], [0, -50]);
-  const opacityRange = useTransform(scrollYProgress, [0.3, 0.4], [0, 1]);
+  const [activeModal, setActiveModal] = useState<string | null>(null);
+  
+  const modalContents: any = {
+    'anomalies': {
+      icon: Activity,
+      title: "Detección Avanzada de Anomalías",
+      subtitle: "Algoritmos de Aprendizaje No Supervisado",
+      description: "Nuestro motor utiliza modelos de aislamiento (Isolation Forests) y DBSCAN para identificar huellas de consumo que se desvían de la norma estadística. No buscamos solo 'picos'; detectamos comportamientos fraudulentos complejos como puentes invertidos, manipulación de fases y bypass selectivo en horarios no comerciales.",
+      tags: ["Isolation Forest", "Sensibilidad: 99.1%", "Target: NTL Reduction"]
+    },
+    'bigdata': {
+      icon: Database,
+      title: "Arquitectura de Ingesta Masiva",
+      subtitle: "Procesamiento de Series Temporales",
+      description: "Infraestructura capaz de ingerir y normalizar flujos de datos AMI (Advanced Metering Infrastructure) a escala de Terabytes. Utilizamos una arquitectura Lambda para procesar streams en tiempo real (Speed Layer) mientras consolidamos históricos (Batch Layer) para reentrenamiento continuo de modelos.",
+      tags: ["Throughput: 1M eventos/seg", "Latencia: Real-time", "Escalabilidad: Horizontal"]
+    },
+    'predictive': {
+      icon: LineChart,
+      title: "Forecasting de Demanda y Carga",
+      subtitle: "Redes Neuronales Recurrentes (LSTM)",
+      description: "Anticipe fallos de red y picos de demanda con 24 horas de antelación. Nuestros modelos LSTM (Long Short-Term Memory) analizan la estacionalidad, variables climáticas y patrones históricos para optimizar el despacho de energía y prevenir sobrecargas en transformadores de distribución.",
+      tags: ["Modelo: LSTM / ARIMA", "Horizonte: 24h - 7d", "Precisión: MAPE < 3%"]
+    },
+    'protocols': {
+      icon: Cpu,
+      title: "Especificaciones de Integración",
+      subtitle: "Interoperabilidad y Seguridad",
+      description: "SW DISICO se integra agnósticamente con su infraestructura existente. Cumplimos con los estándares más estrictos de la industria para garantizar que la transmisión de datos sea segura, encriptada y compatible con medidores de múltiples fabricantes.",
+      items: [
+        "DLMS/COSEM: Compatibilidad nativa con medidores inteligentes.",
+        "IEC 61968: Estándar de integración CIM para Utilities.",
+        "Seguridad: Encriptación AES-256 en tránsito y reposo.",
+        "API: RESTful y GraphQL para integración con ERP/SCADA."
+      ]
+    }
+  };
 
   return (
     <section className="relative min-h-screen bg-slate-950 py-32 overflow-hidden flex flex-col items-center">
-      {/* Dynamic Background */}
+      <TechModal 
+        isOpen={!!activeModal} 
+        onClose={() => setActiveModal(null)} 
+        data={activeModal ? modalContents[activeModal] : null} 
+      />
+
       <div className="absolute inset-0 pointer-events-none">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(48,103,126,0.1)_0%,transparent_70%)]" />
         <div className="absolute inset-0 opacity-10 bg-grid-pattern bg-grid scale-150 -rotate-12" />
@@ -124,10 +232,8 @@ export const TechOpportunity: React.FC = () => {
         </div>
 
         <div className="grid lg:grid-cols-2 gap-20 items-center">
-          {/* Central AI Nucleus con Lottie */}
           <div className="flex justify-center relative">
             <NeuralCore isActive={isHeroHovered} />
-            {/* HUD Indicators around core */}
             <div className="absolute -top-10 -left-10 hidden sm:block">
               <div className="text-[10px] font-mono text-brand-blue/60 mb-2">SCANNING_PROTOCOL_v4.2</div>
               <div className="w-32 h-[1px] bg-gradient-to-r from-brand-blue/60 to-transparent" />
@@ -138,30 +244,31 @@ export const TechOpportunity: React.FC = () => {
             </div>
           </div>
 
-          {/* Efficiency Matrix HUD */}
           <div className="space-y-10">
              <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
                 <InteractiveNode 
                   icon={Activity} 
                   title="Anomalías" 
-                  description="Detección de patrones de consumo irregulares mediante clustering avanzado."
+                  description="Detección de patrones irregulares mediante clustering avanzado."
                   delay={0.1}
+                  onClick={() => setActiveModal('anomalies')}
                 />
                 <InteractiveNode 
                   icon={Database} 
                   title="Big Data" 
-                  description="Procesamiento de millones de eventos por segundo en tiempo real."
+                  description="Procesamiento de millones de eventos en tiempo real."
                   delay={0.2}
+                  onClick={() => setActiveModal('bigdata')}
                 />
                 <InteractiveNode 
                   icon={LineChart} 
                   title="Predictivo" 
-                  description="Modelos de forecasting que anticipan picos de demanda y fallos."
+                  description="Forecasting que anticipa picos de demanda y fallos."
                   delay={0.3}
+                  onClick={() => setActiveModal('predictive')}
                 />
              </div>
 
-             {/* HUD Table Section */}
              <motion.div 
                initial={{ opacity: 0, x: 20 }}
                whileInView={{ opacity: 1, x: 0 }}
@@ -200,7 +307,10 @@ export const TechOpportunity: React.FC = () => {
                    </div>
                 </div>
 
-                <button className="w-full mt-10 py-4 bg-white/5 border border-white/10 rounded-xl text-white font-bold text-xs uppercase tracking-widest hover:bg-brand-blue hover:border-brand-blue transition-all flex items-center justify-center gap-3 group">
+                <button 
+                  onClick={() => setActiveModal('protocols')}
+                  className="w-full mt-10 py-4 bg-white/5 border border-white/10 rounded-xl text-white font-bold text-xs uppercase tracking-widest hover:bg-brand-blue hover:border-brand-blue transition-all flex items-center justify-center gap-3 group"
+                >
                   Explorar Protocolos Técnicos
                   <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                 </button>
