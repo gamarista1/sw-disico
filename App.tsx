@@ -6,6 +6,7 @@ import { TheSolution } from './modules/the-solution/TheSolution';
 import { OperationalProcess } from './modules/operational-process/OperationalProcess';
 import { ResultsROI } from './modules/results-roi/ResultsROI';
 import { CompetitiveAdvantages } from './modules/competitive-advantages/CompetitiveAdvantages';
+import { CallToAction } from './modules/cta/CallToAction';
 
 function App() {
   return (
@@ -23,9 +24,8 @@ function App() {
       <ResultsROI />
 
       <CompetitiveAdvantages />
-      
-      {/* Marcadores para secciones futuras (Screaming Architecture) */}
-      <div id="lead-capture"></div>
+
+      <CallToAction />
     </div>
   );
 }
