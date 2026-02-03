@@ -1,42 +1,37 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { motion } from 'framer-motion';
 import { ArrowRight, Zap, TrendingUp, ShieldCheck } from 'lucide-react';
 import { Button } from '../../shared/components/ui/Button';
 import Lightning from '../../shared/components/ui/Lightning';
 
 const AudioVisualizer: React.FC = () => {
-  const [isHovered, setIsHovered] = useState(false);
   const bars = [40, 65, 45, 70, 85, 60, 75, 90, 65, 80];
 
   return (
-    <div 
-      onMouseEnter={() => setIsHovered(true)} 
-      onMouseLeave={() => setIsHovered(false)}
-      className="h-32 flex items-end justify-between gap-1.5 px-1 group/chart"
-    >
+    <div className="h-32 flex items-end justify-between gap-1.5 px-1">
       {bars.map((h, i) => (
         <motion.div 
           key={i}
           initial={{ height: 0 }}
           animate={{ height: `${h}%` }}
           whileHover={{ 
-            height: `${h + 5}%`, 
-            filter: 'brightness(1.2)',
-            transition: { duration: 0.2 }
+            scaleY: 1.2,
+            transition: { duration: 0.2, ease: "easeOut" }
           }}
+          style={{ originY: 1 }} // Asegura que el crecimiento sea hacia arriba
           transition={{ 
             duration: 0.6, 
             delay: 0.8 + (i * 0.08),
             ease: "easeOut" 
           }}
-          className={`w-full rounded-t-[2px] cursor-pointer relative group/bar transition-all duration-500 ${
-            isHovered 
-              ? 'bg-gradient-to-t from-orange-600 via-orange-500 to-amber-400 border border-orange-400/50 shadow-[0_0_20px_rgba(249,115,22,0.4)] opacity-100' 
-              : 'bg-gradient-to-t from-brand-blue/40 to-brand-blue opacity-70 border border-transparent'
-          }`}
+          className="w-full rounded-t-[2px] cursor-pointer relative group/bar transition-all duration-300
+                     bg-cyan-500/20 border border-cyan-400/30 shadow-[0_0_15px_rgba(34,211,238,0.2)]
+                     hover:bg-gradient-to-t hover:from-orange-600 hover:via-orange-500 hover:to-amber-400 
+                     hover:border-orange-400/50 hover:shadow-[0_0_20px_rgba(249,115,22,0.4)] hover:z-20"
         >
-          <div className={`absolute -top-6 left-1/2 -translate-x-1/2 px-1.5 py-0.5 rounded text-[8px] text-white opacity-0 group-hover/bar:opacity-100 transition-opacity font-bold ${isHovered ? 'bg-brand-orange' : 'bg-brand-blue'}`}>
-            {h}%
+          {/* Tooltip con el porcentaje individual */}
+          <div className="absolute -top-7 left-1/2 -translate-x-1/2 px-1.5 py-0.5 rounded text-[8px] text-white opacity-0 group-hover/bar:opacity-100 transition-all font-bold bg-brand-orange shadow-lg whitespace-nowrap">
+            {h}% Recup.
           </div>
         </motion.div>
       ))}

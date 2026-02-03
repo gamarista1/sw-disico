@@ -1,6 +1,7 @@
 import React from 'react';
 import { HeroHeader } from './modules/recovery-hero/HeroHeader';
 import { LossAnalysis } from './modules/loss-analysis/LossAnalysis';
+import { TechOpportunity } from './modules/tech-opportunity/TechOpportunity';
 
 function App() {
   return (
@@ -8,6 +9,8 @@ function App() {
       <HeroHeader />
       
       <LossAnalysis />
+
+      <TechOpportunity />
       
       {/* Marcadores para secciones futuras (Screaming Architecture) */}
       <div id="ia-engine"></div>
