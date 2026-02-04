@@ -201,7 +201,7 @@ export const TheSolution: React.FC = () => {
   ];
 
   return (
-    <section className="relative min-h-screen bg-slate-950 py-32 overflow-hidden flex flex-col items-center">
+    <section id="solution" className="relative min-h-screen bg-slate-950 py-32 overflow-hidden flex flex-col items-center">
       <SolutionModal 
         isOpen={!!activeModal} 
         onClose={() => setActiveModal(null)} 

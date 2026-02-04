@@ -180,7 +180,7 @@ export const OperationalProcess: React.FC = () => {
   const [activeStep, setActiveStep] = useState<ProcessStep | null>(null);
 
   return (
-    <section className="relative min-h-screen bg-slate-950 py-32 overflow-hidden flex flex-col items-center">
+    <section id="process" className="relative min-h-screen bg-slate-950 py-32 overflow-hidden flex flex-col items-center">
       <StepModal 
         isOpen={!!activeStep} 
         onClose={() => setActiveStep(null)} 

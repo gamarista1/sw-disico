@@ -153,7 +153,7 @@ export const CallToAction: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   return (
-    <section id="lead-capture" className="relative min-h-[90vh] bg-slate-950 flex flex-col items-center justify-center overflow-hidden py-32">
+    <section id="contact" className="relative min-h-[90vh] bg-slate-950 flex flex-col items-center justify-center overflow-hidden py-32">
       <ContactModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
 
       {/* Aurora Background Effects */}

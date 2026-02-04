@@ -1,4 +1,5 @@
 import React from 'react';
+import { Navbar } from './shared/components/layout/Navbar';
 import { HeroHeader } from './modules/recovery-hero/HeroHeader';
 import { LossAnalysis } from './modules/loss-analysis/LossAnalysis';
 import { TechOpportunity } from './modules/tech-opportunity/TechOpportunity';
@@ -11,6 +12,8 @@ import { CallToAction } from './modules/cta/CallToAction';
 function App() {
   return (
     <div className="antialiased text-white bg-slate-950 min-h-screen">
+      <Navbar />
+      
       <HeroHeader />
       
       <LossAnalysis />
