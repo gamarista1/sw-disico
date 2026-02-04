@@ -28,40 +28,40 @@ export const Navbar: React.FC = () => {
   return (
     <nav 
       className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 ${
-        scrolled ? 'bg-slate-950/80 backdrop-blur-md border-b border-white/5 py-3' : 'bg-transparent py-6'
+        scrolled ? 'bg-slate-950/90 backdrop-blur-md border-b border-white/5 py-4' : 'bg-transparent py-8'
       }`}
     >
       <div className="container mx-auto px-4 flex items-center justify-between">
-        {/* Logo Corporativo con Interacciones y Fallback en caso de error 422/404 */}
+        {/* Logo Corporativo con Interacciones, Fallback y Estilo Siluetado */}
         <motion.a 
           href="#" 
           className="flex items-center gap-2 group"
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
+          whileHover={{ scale: 1.02 }}
+          whileTap={{ scale: 0.98 }}
           transition={{ type: "spring", stiffness: 400, damping: 17 }}
         >
           <div className="relative flex items-center">
             {!imgError ? (
               <img 
-                src="logo_disico_1.png" 
+                src="https://disico.com.co/logo_disico2.png" 
                 alt="DISICO Logo" 
-                className="h-10 w-auto rounded-xl border border-white/10 bg-slate-900/40 p-1.5 shadow-2xl transition-all duration-300 group-hover:border-brand-blue/50"
+                className="h-12 lg:h-16 w-auto rounded-xl border border-white/10 shadow-[0_8px_30px_rgb(0,0,0,0.4)] transition-all duration-300 group-hover:border-brand-blue/40 group-hover:shadow-brand-blue/20"
                 onError={() => {
-                  console.warn("Fallo al cargar 'logo_disico_1.png'. Activando fallback visual.");
+                  console.warn("Fallo al cargar el logo v2. Activando fallback.");
                   setImgError(true);
                 }}
               />
             ) : (
-              /* Fallback elegante si la imagen no se procesa correctamente en el servidor */
-              <div className="h-10 px-3 flex items-center gap-1.5 rounded-xl border border-brand-blue/30 bg-brand-blue/10 text-white shadow-2xl">
-                <span className="text-xl font-black tracking-tighter">SW</span>
-                <span className="text-xl font-black tracking-tighter text-brand-blue group-hover:text-brand-orange transition-colors">DISICO</span>
+              /* Fallback elegante si la imagen remota falla */
+              <div className="h-12 lg:h-16 px-4 flex items-center gap-1.5 rounded-xl border border-brand-blue/30 bg-brand-blue/10 text-white shadow-2xl">
+                <span className="text-xl lg:text-2xl font-black tracking-tighter">SW</span>
+                <span className="text-xl lg:text-2xl font-black tracking-tighter text-brand-blue group-hover:text-brand-orange transition-colors">DISICO</span>
               </div>
             )}
             
-            {/* Efecto de brillo sutil reactivo */}
+            {/* Efecto de resplandor sutil detrás del logo */}
             <motion.div 
-              className="absolute inset-0 rounded-xl bg-brand-blue/20 opacity-0 blur-xl group-hover:opacity-100 transition-opacity pointer-events-none"
+              className="absolute inset-0 rounded-xl bg-brand-blue/10 opacity-0 blur-2xl group-hover:opacity-100 transition-opacity pointer-events-none"
               initial={false}
             />
           </div>
@@ -89,7 +89,7 @@ export const Navbar: React.FC = () => {
         <div className="flex items-center gap-4">
           <div className="hidden sm:block">
             <a href="#contact">
-              <Button variant="primary" className="px-5 py-2.5 text-[10px] font-black uppercase tracking-widest">
+              <Button variant="primary" className="px-6 py-3 text-[10px] font-black uppercase tracking-widest shadow-xl">
                 Agendar Demo
               </Button>
             </a>
@@ -111,7 +111,7 @@ export const Navbar: React.FC = () => {
             initial={{ opacity: 0, y: -100 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -100 }}
-            className="fixed inset-0 top-[60px] bg-slate-950 z-40 lg:hidden flex flex-col p-8"
+            className="fixed inset-0 top-[80px] bg-slate-950 z-40 lg:hidden flex flex-col p-8"
           >
             <div className="flex flex-col gap-8 mt-12">
               {navLinks.map((link, i) => (
