@@ -31,11 +31,27 @@ export const Navbar: React.FC = () => {
       }`}
     >
       <div className="container mx-auto px-4 flex items-center justify-between">
-        {/* Logo */}
-        <a href="#" className="flex items-center gap-1 group">
-          <span className="text-xl sm:text-2xl font-black tracking-tighter text-white">SW</span>
-          <span className="text-xl sm:text-2xl font-black tracking-tighter text-brand-blue group-hover:text-brand-orange transition-colors">DISICO</span>
-        </a>
+        {/* Logo Corporativo con Interacciones */}
+        <motion.a 
+          href="#" 
+          className="flex items-center gap-2 group"
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+          transition={{ type: "spring", stiffness: 400, damping: 17 }}
+        >
+          <div className="relative">
+            <img 
+              src="/logo_disico_1.png" 
+              alt="DISICO Logo" 
+              className="h-10 w-auto rounded-xl border border-white/10 bg-slate-900/40 p-1.5 shadow-2xl transition-colors duration-300 group-hover:border-brand-blue/50"
+            />
+            {/* Efecto de brillo sutil en el logo al pasar el mouse */}
+            <motion.div 
+              className="absolute inset-0 rounded-xl bg-brand-blue/10 opacity-0 blur-lg group-hover:opacity-100 transition-opacity"
+              initial={false}
+            />
+          </div>
+        </motion.a>
 
         {/* Desktop Links */}
         <div className="hidden lg:flex items-center gap-8">
