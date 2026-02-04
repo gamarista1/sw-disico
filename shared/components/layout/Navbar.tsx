@@ -111,31 +111,39 @@ export const Navbar: React.FC = () => {
             initial={{ opacity: 0, y: -100 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -100 }}
-            className="fixed inset-0 top-[80px] bg-slate-950 z-40 lg:hidden flex flex-col p-8"
+            className="fixed inset-0 top-[80px] bg-slate-950 z-40 lg:hidden flex flex-col p-8 overflow-hidden"
           >
-            <div className="flex flex-col gap-8 mt-12">
-              {navLinks.map((link, i) => (
-                <motion.a
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: i * 0.1 }}
-                  key={link.name}
-                  href={link.href}
-                  onClick={() => setIsOpen(false)}
-                  className="text-3xl font-black text-white hover:text-brand-orange transition-colors tracking-tighter"
-                >
-                  {link.name}
-                </motion.a>
-              ))}
-            </div>
-            
-            <div className="mt-auto pb-12">
-              <a href="#contact" onClick={() => setIsOpen(false)}>
-                <Button variant="primary" className="w-full py-5 text-sm font-black uppercase tracking-[0.2em]">
-                  Agendar Demo Técnica
-                  <ArrowRight className="w-5 h-5 ml-2" />
-                </Button>
-              </a>
+            {/* Fondo con imagen del producto (Opacidad reducida para legibilidad) */}
+            <div 
+              className="absolute inset-0 z-0 pointer-events-none opacity-10 bg-center bg-no-repeat bg-contain"
+              style={{ backgroundImage: 'url(https://disico.com.co/logo-swdisico.png)' }}
+            />
+
+            <div className="relative z-10 flex flex-col h-full">
+              <div className="flex flex-col gap-8 mt-12">
+                {navLinks.map((link, i) => (
+                  <motion.a
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: i * 0.1 }}
+                    key={link.name}
+                    href={link.href}
+                    onClick={() => setIsOpen(false)}
+                    className="text-3xl font-black text-white hover:text-brand-orange transition-colors tracking-tighter"
+                  >
+                    {link.name}
+                  </motion.a>
+                ))}
+              </div>
+              
+              <div className="mt-auto pb-12">
+                <a href="#contact" onClick={() => setIsOpen(false)}>
+                  <Button variant="primary" className="w-full py-3.5 text-xs font-black uppercase tracking-[0.2em]">
+                    Agendar Demo Técnica
+                    <ArrowRight className="w-4 h-4 ml-2" />
+                  </Button>
+                </a>
+              </div>
             </div>
           </motion.div>
         )}

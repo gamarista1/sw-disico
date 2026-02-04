@@ -3,9 +3,12 @@ import React from 'react';
 import { motion, HTMLMotionProps } from 'framer-motion';
 
 // Use HTMLMotionProps to ensure compatibility with framer-motion properties
+// Explicitly adding children and className to the interface to support React 18+ React.FC
 interface ButtonProps extends HTMLMotionProps<"button"> {
   variant?: 'primary' | 'secondary' | 'outline';
   glow?: boolean;
+  children?: React.ReactNode;
+  className?: string;
 }
 
 export const Button: React.FC<ButtonProps> = ({ 
