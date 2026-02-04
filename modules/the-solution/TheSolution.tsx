@@ -111,24 +111,34 @@ const SolutionModal = ({ isOpen, onClose, data }: { isOpen: boolean, onClose: ()
 };
 
 const TechLayer = ({ index, total, isHovered, label }: { index: number, total: number, isHovered: boolean, label: string }) => {
-  const yOffset = (index - total / 2) * 40;
+  const yOffset = (index - total / 2) * 35;
+  const themeColor = "#2F687E";
+
   return (
     <motion.div
       animate={{ 
-        y: isHovered ? yOffset * 1.5 : yOffset,
+        y: isHovered ? yOffset * 1.4 : yOffset,
         rotateX: 45,
         rotateZ: -45,
-        scale: isHovered ? 1.1 : 1,
-        opacity: isHovered ? 1 : 0.6
+        scale: isHovered ? 1.05 : 1,
+        opacity: isHovered ? 1 : 0.5 + (index * 0.15)
       }}
-      className="absolute w-48 h-48 sm:w-64 sm:h-64 border-2 border-brand-blue/30 bg-brand-blue/5 backdrop-blur-sm rounded-xl flex items-center justify-center"
-      style={{ zIndex: total - index }}
+      className="absolute w-44 h-44 sm:w-60 sm:h-60 rounded-2xl border-2 backdrop-blur-md flex items-center justify-center"
+      style={{ 
+        zIndex: total - index, 
+        borderColor: `${themeColor}66`,
+        backgroundColor: `${themeColor}0D`,
+        boxShadow: isHovered ? `0 0 30px ${themeColor}22` : 'none'
+      }}
     >
-      <div className="absolute inset-0 bg-grid-pattern opacity-10" />
-      <span className="absolute bottom-4 right-4 text-[8px] font-mono text-brand-blue/40 uppercase tracking-widest">{label}</span>
-      {index === 0 && <Cpu className="w-12 h-12 text-brand-blue opacity-50" />}
-      {index === 1 && <Workflow className="w-12 h-12 text-brand-blue opacity-50" />}
-      {index === 2 && <Database className="w-12 h-12 text-brand-blue opacity-50" />}
+      <div className="absolute inset-0 bg-grid-pattern opacity-5" />
+      <span className="absolute bottom-3 right-3 text-[7px] font-mono uppercase tracking-[0.2em]" style={{ color: `${themeColor}88` }}>{label}</span>
+      
+      <div className="opacity-40">
+        {index === 0 && <Cpu className="w-10 h-10" style={{ color: themeColor }} />}
+        {index === 1 && <Workflow className="w-10 h-10" style={{ color: themeColor }} />}
+        {index === 2 && <Database className="w-10 h-10" style={{ color: themeColor }} />}
+      </div>
     </motion.div>
   );
 };
@@ -208,7 +218,6 @@ export const TheSolution: React.FC = () => {
         data={activeModal ? solutionCards.find(c => c.id === activeModal) : null} 
       />
 
-      {/* Blueprint Grid Background */}
       <div className="absolute inset-0 pointer-events-none opacity-20">
         <div className="absolute inset-0 bg-grid-pattern bg-grid [mask-image:radial-gradient(ellipse_at_center,black,transparent)]" />
       </div>
@@ -227,7 +236,7 @@ export const TheSolution: React.FC = () => {
             whileInView={{ opacity: 1, y: 0 }}
             className="text-4xl lg:text-6xl font-black text-white tracking-tighter leading-none mb-8"
           >
-            Arquitectura de Precisión para la <span className="text-brand-blue">Recuperación</span> de Energía
+            Arquitectura de Precisión para la <span className="text-[#2F687E]">Recuperación</span> de Energía
           </motion.h2>
           <motion.p 
              initial={{ opacity: 0 }}
@@ -239,23 +248,56 @@ export const TheSolution: React.FC = () => {
           </motion.p>
         </div>
 
-        <div className="flex flex-col lg:flex-row items-center justify-between gap-20">
+        <div className="flex flex-col lg:flex-row items-start justify-between gap-12 lg:gap-20">
           
-          {/* Central Blueprint Engine */}
+          {/* Central Blueprint Engine con Logo Flotante */}
           <div 
-            className="relative w-full lg:w-1/2 h-[400px] sm:h-[600px] flex items-center justify-center perspective-1000"
+            className="relative w-full lg:w-1/2 h-[450px] sm:h-[650px] flex items-center justify-center perspective-1000 lg:sticky lg:top-24"
             onMouseEnter={() => setHoveredLayer(true)}
             onMouseLeave={() => setHoveredLayer(false)}
           >
+            {/* Capas del Blueprint */}
             <TechLayer index={0} total={3} isHovered={hoveredLayer} label="Intelligence Layer (IA)" />
             <TechLayer index={1} total={3} isHovered={hoveredLayer} label="Logic Layer (API)" />
             <TechLayer index={2} total={3} isHovered={hoveredLayer} label="Data Layer (Storage)" />
             
-            {/* Connecting Lines */}
-            <svg className="absolute inset-0 w-full h-full pointer-events-none">
+            {/* Logotipo del Producto Flotante con efectos */}
+            <motion.div
+              initial={{ opacity: 0, y: 50 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              animate={{ 
+                y: [0, -15, 0],
+                rotateZ: [0, 1, 0]
+              }}
+              transition={{ 
+                y: { duration: 6, repeat: Infinity, ease: "easeInOut" },
+                rotateZ: { duration: 8, repeat: Infinity, ease: "easeInOut" }
+              }}
+              className="absolute z-50 pointer-events-none flex flex-col items-center"
+              style={{ top: '15%' }}
+            >
+              <div className="relative group">
+                <img 
+                  src="https://disico.com.co/logo-swdisico.png" 
+                  alt="SW DISICO Logo" 
+                  className="w-48 sm:w-64 h-auto opacity-80 filter drop-shadow-[0_0_20px_rgba(47,104,126,0.5)]"
+                />
+                <div className="absolute inset-0 bg-[#2F687E]/10 blur-3xl rounded-full opacity-30 -z-10" />
+              </div>
+              <motion.div 
+                animate={{ opacity: [0.3, 0.6, 0.3] }}
+                transition={{ duration: 3, repeat: Infinity }}
+                className="mt-4 text-[10px] font-black text-[#2F687E] tracking-[0.4em] uppercase"
+              >
+                PROCESAMIENTO ACTIVO
+              </motion.div>
+            </motion.div>
+
+            {/* Líneas Conectoras Estilo Blueprint */}
+            <svg className="absolute inset-0 w-full h-full pointer-events-none opacity-20">
                <motion.path 
-                 animate={{ opacity: hoveredLayer ? 0.3 : 0.1 }}
-                 d="M 50% 50% L 100% 0%" stroke="white" strokeWidth="0.5" fill="none" strokeDasharray="5,5" />
+                 animate={{ opacity: hoveredLayer ? 0.4 : 0.1 }}
+                 d="M 50% 10% L 50% 90%" stroke="#2F687E" strokeWidth="1" fill="none" strokeDasharray="4,4" />
             </svg>
           </div>
 
@@ -269,18 +311,18 @@ export const TheSolution: React.FC = () => {
                 whileInView={{ opacity: 1, x: 0 }}
                 transition={{ delay: idx * 0.1 }}
                 onClick={() => setActiveModal(card.id)}
-                className="group relative p-8 bg-slate-900/40 backdrop-blur-xl border border-white/5 rounded-3xl hover:border-brand-blue/40 transition-all cursor-pointer overflow-hidden"
+                className="group relative p-8 bg-slate-900/60 backdrop-blur-xl border border-white/5 rounded-3xl hover:border-[#2F687E]/50 transition-all cursor-pointer overflow-hidden shadow-2xl"
               >
-                <div className="absolute inset-0 bg-gradient-to-br from-brand-blue/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                <div className="absolute inset-0 bg-gradient-to-br from-[#2F687E]/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
                 
-                <div className="w-12 h-12 rounded-xl bg-brand-blue/10 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform border border-brand-blue/20">
-                  <card.icon className="w-6 h-6 text-brand-blue" />
+                <div className="w-12 h-12 rounded-xl bg-[#2F687E]/10 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform border border-[#2F687E]/20">
+                  <card.icon className="w-6 h-6 text-[#2F687E]" />
                 </div>
                 
-                <h4 className="text-white font-bold text-lg mb-2 leading-tight group-hover:text-brand-blue transition-colors">
+                <h4 className="text-white font-bold text-lg mb-2 leading-tight group-hover:text-[#2F687E] transition-colors">
                   {card.title}
                 </h4>
-                <p className="text-brand-blue font-mono text-[9px] uppercase tracking-widest font-black mb-4">
+                <p className="text-[#2F687E] font-mono text-[9px] uppercase tracking-widest font-black mb-4">
                   {card.tag}
                 </p>
                 
@@ -289,11 +331,11 @@ export const TheSolution: React.FC = () => {
                   <ChevronRight className="w-3 h-3 group-hover:translate-x-1 transition-transform" />
                 </div>
 
-                {/* Decorative scanning line */}
+                {/* Línea de escaneo decorativa */}
                 <motion.div 
                   animate={{ y: ["0%", "100%", "0%"] }}
                   transition={{ duration: 10, repeat: Infinity, ease: "linear" }}
-                  className="absolute left-0 right-0 h-[1px] bg-brand-blue/20 blur-[1px] pointer-events-none"
+                  className="absolute left-0 right-0 h-[1px] bg-[#2F687E]/20 blur-[1px] pointer-events-none"
                 />
               </motion.div>
             ))}
@@ -302,25 +344,28 @@ export const TheSolution: React.FC = () => {
         </div>
       </div>
 
-      {/* Final Blueprint Decoration Section */}
-      <div className="mt-32 w-full max-w-5xl px-4">
-         <div className="border-t border-white/5 pt-12 grid grid-cols-2 lg:grid-cols-4 gap-8">
-            <div className="text-center">
-               <div className="text-2xl font-black text-white mb-1">SaaS</div>
+      {/* Decoración Final Estilo Blueprint */}
+      <div className="mt-32 w-full max-w-5xl px-4 border-t border-white/5 pt-12">
+         <div className="grid grid-cols-2 lg:grid-cols-4 gap-8 relative">
+            <div className="text-center group cursor-default">
+               <div className="text-2xl font-black text-white mb-1 group-hover:text-[#2F687E] transition-colors">SaaS</div>
                <div className="text-[9px] font-mono text-slate-500 uppercase tracking-widest">Modelo de Despliegue</div>
             </div>
-            <div className="text-center">
-               <div className="text-2xl font-black text-white mb-1">99.9%</div>
+            <div className="text-center group cursor-default">
+               <div className="text-2xl font-black text-white mb-1 group-hover:text-[#2F687E] transition-colors">99.9%</div>
                <div className="text-[9px] font-mono text-slate-500 uppercase tracking-widest">Disponibilidad SLA</div>
             </div>
-            <div className="text-center">
-               <div className="text-2xl font-black text-white mb-1">256-bit</div>
+            <div className="text-center group cursor-default">
+               <div className="text-2xl font-black text-white mb-1 group-hover:text-[#2F687E] transition-colors">256-bit</div>
                <div className="text-[9px] font-mono text-slate-500 uppercase tracking-widest">Encriptación Militar</div>
             </div>
-            <div className="text-center">
-               <div className="text-2xl font-black text-white mb-1">REST</div>
+            <div className="text-center group cursor-default">
+               <div className="text-2xl font-black text-white mb-1 group-hover:text-[#2F687E] transition-colors">REST</div>
                <div className="text-[9px] font-mono text-slate-500 uppercase tracking-widest">Arquitectura API</div>
             </div>
+
+            {/* Línea roja decorativa sugerida por el usuario para indicar final de sección o acento */}
+            <div className="absolute -bottom-8 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-[#2F687E]/40 to-transparent" />
          </div>
       </div>
     </section>
