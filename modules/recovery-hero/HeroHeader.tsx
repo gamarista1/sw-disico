@@ -59,10 +59,10 @@ export const HeroHeader: React.FC = () => {
       <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-brand-blue/10 rounded-full blur-3xl" />
       <div className="absolute bottom-1/4 right-1/4 w-64 h-64 bg-brand-orange/5 rounded-full blur-3xl" />
 
-      <div className="container mx-auto px-4 z-10 relative grid lg:grid-cols-2 gap-12 items-center">
+      <div className="container mx-auto px-4 z-10 relative grid lg:grid-cols-2 gap-12 items-center pt-20 lg:pt-0">
         
         {/* Text Content */}
-        <div className="space-y-8 text-center lg:text-left">
+        <div className="space-y-6 lg:space-y-8 text-center lg:text-left">
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -70,14 +70,14 @@ export const HeroHeader: React.FC = () => {
             className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-brand-blue/10 border border-brand-blue/30 backdrop-blur-sm"
           >
             <ShieldCheck className="w-4 h-4 text-brand-orange" />
-            <span className="text-sm font-medium text-gray-300 uppercase tracking-widest">Tecnología de Grado Utility</span>
+            <span className="text-[10px] lg:text-sm font-medium text-gray-300 uppercase tracking-widest">Tecnología de Grado Utility</span>
           </motion.div>
 
           <motion.h1 
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.2 }}
-            className="text-5xl lg:text-7xl font-bold tracking-tight text-white leading-tight"
+            className="text-[clamp(1.75rem,5vw,3.75rem)] font-bold tracking-tight text-white leading-[1.1]"
           >
             Transforme sus datos en <span className="text-transparent bg-clip-text bg-gradient-to-r from-white to-brand-blue">Energía Recuperada</span>
           </motion.h1>
@@ -86,7 +86,7 @@ export const HeroHeader: React.FC = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.4 }}
-            className="text-xl text-gray-400 max-w-2xl mx-auto lg:mx-0 leading-relaxed"
+            className="text-lg lg:text-xl text-gray-400 max-w-2xl mx-auto lg:mx-0 leading-relaxed"
           >
             Detección de pérdidas NTL con Inteligencia Artificial, sin inversión inicial en infraestructura y un <span className="text-white font-semibold">ROI &lt; 12 meses</span>.
           </motion.p>
@@ -97,11 +97,11 @@ export const HeroHeader: React.FC = () => {
             transition={{ duration: 0.8, delay: 0.6 }}
             className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start"
           >
-            <Button variant="primary" glow className="group">
+            <Button variant="primary" glow className="group px-8 py-4">
               Solicitar Demo Personalizada
               <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
             </Button>
-            <Button variant="outline">
+            <Button variant="outline" className="px-8 py-4">
               Ver Análisis de Caso
             </Button>
           </motion.div>
@@ -110,7 +110,7 @@ export const HeroHeader: React.FC = () => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 1, delay: 0.8 }}
-            className="flex items-center gap-8 justify-center lg:justify-start pt-4 text-gray-500 text-sm font-medium"
+            className="flex items-center gap-6 justify-center lg:justify-start pt-4 text-gray-500 text-[10px] lg:text-sm font-medium"
           >
             <div className="flex items-center gap-2">
               <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
