@@ -8,7 +8,7 @@ const AudioVisualizer: React.FC = () => {
   const bars = [40, 65, 45, 70, 85, 60, 75, 90, 65, 80];
 
   return (
-    <div className="h-32 flex items-end justify-between gap-1.5 px-1">
+    <div className="h-32 flex items-end justify-between gap-1.5 px-1 relative z-10">
       {bars.map((h, i) => (
         <motion.div 
           key={i}
@@ -133,10 +133,16 @@ export const HeroHeader: React.FC = () => {
           <motion.div 
             whileHover={{ y: -10, rotateX: 2, rotateY: -2 }}
             transition={{ type: "spring", stiffness: 300, damping: 20 }}
-            className="relative z-10 bg-slate-900/60 backdrop-blur-xl border border-brand-blue/30 rounded-2xl p-6 shadow-[0_20px_50px_rgba(0,0,0,0.5)] cursor-default"
+            className="relative z-10 bg-slate-900/60 backdrop-blur-xl border border-white/10 rounded-2xl p-6 shadow-[0_20px_50px_rgba(0,0,0,0.5)] cursor-default overflow-hidden"
           >
+            {/* Logo de producto de fondo con transparencia */}
+            <div 
+              className="absolute inset-0 z-0 opacity-[0.07] bg-center bg-no-repeat bg-contain scale-90 pointer-events-none"
+              style={{ backgroundImage: 'url(https://disico.com.co/logo-swdisico.png)' }}
+            />
+
             {/* Header del Dashboard */}
-            <div className="flex items-center justify-between mb-8 border-b border-white/10 pb-4">
+            <div className="relative z-10 flex items-center justify-between mb-8 border-b border-white/10 pb-4">
               <div className="flex gap-2">
                 <motion.div whileHover={{ scale: 1.2 }} className="w-3 h-3 rounded-full bg-red-500/50 cursor-pointer" />
                 <motion.div whileHover={{ scale: 1.2 }} className="w-3 h-3 rounded-full bg-yellow-500/50 cursor-pointer" />
@@ -146,10 +152,10 @@ export const HeroHeader: React.FC = () => {
             </div>
 
             {/* Grid de Estadísticas con Hover individual */}
-            <div className="grid grid-cols-2 gap-4 mb-6">
+            <div className="relative z-10 grid grid-cols-2 gap-4 mb-6">
               <motion.div 
                 whileHover={{ scale: 1.05, borderColor: 'rgba(48, 103, 126, 0.6)', backgroundColor: 'rgba(48, 103, 126, 0.15)' }}
-                className="bg-brand-blue/10 p-4 rounded-xl border border-brand-blue/20 transition-colors duration-300"
+                className="bg-brand-blue/10 p-4 rounded-xl border border-brand-blue/20 transition-colors duration-300 backdrop-blur-sm"
               >
                 <div className="text-gray-400 text-[10px] uppercase tracking-wider mb-1 font-semibold">Precisión del Modelo</div>
                 <div className="text-2xl font-bold text-white tracking-tight">98.4%</div>
@@ -160,7 +166,7 @@ export const HeroHeader: React.FC = () => {
 
               <motion.div 
                 whileHover={{ scale: 1.05, borderColor: 'rgba(244, 132, 35, 0.6)', backgroundColor: 'rgba(244, 132, 35, 0.15)' }}
-                className="bg-brand-orange/10 p-4 rounded-xl border border-brand-orange/20 relative overflow-hidden transition-colors duration-300"
+                className="bg-brand-orange/10 p-4 rounded-xl border border-brand-orange/20 relative overflow-hidden transition-colors duration-300 backdrop-blur-sm"
               >
                 <div className="text-gray-400 text-[10px] uppercase tracking-wider mb-1 font-semibold">Recuperación Media</div>
                 <div className="text-2xl font-bold text-brand-orange tracking-tight">40-70%</div>
@@ -178,7 +184,7 @@ export const HeroHeader: React.FC = () => {
             <AudioVisualizer />
 
             {/* Footer del Dashboard */}
-            <div className="mt-5 flex justify-between items-center text-[9px] text-gray-500 font-mono tracking-widest border-t border-white/5 pt-3">
+            <div className="relative z-10 mt-5 flex justify-between items-center text-[9px] text-gray-500 font-mono tracking-widest border-t border-white/5 pt-3">
                <div className="flex items-center gap-1.5">
                  <div className="w-1 h-1 rounded-full bg-brand-blue" />
                  <span>ANÁLISIS DE CARGA</span>
