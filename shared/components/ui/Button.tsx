@@ -9,6 +9,8 @@ interface ButtonProps extends HTMLMotionProps<"button"> {
   glow?: boolean;
   children?: React.ReactNode;
   className?: string;
+  // Explicitly add onClick handler for type compatibility in complex compositions
+  onClick?: React.MouseEventHandler<HTMLButtonElement>;
 }
 
 export const Button: React.FC<ButtonProps> = ({ 
