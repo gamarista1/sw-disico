@@ -15,6 +15,7 @@ const navLinks = [
 export const Navbar: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [imgError, setImgError] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -31,7 +32,7 @@ export const Navbar: React.FC = () => {
       }`}
     >
       <div className="container mx-auto px-4 flex items-center justify-between">
-        {/* Logo Corporativo con Interacciones */}
+        {/* Logo Corporativo con Interacciones y Fallback en caso de error 422/404 */}
         <motion.a 
           href="#" 
           className="flex items-center gap-2 group"
@@ -39,15 +40,28 @@ export const Navbar: React.FC = () => {
           whileTap={{ scale: 0.95 }}
           transition={{ type: "spring", stiffness: 400, damping: 17 }}
         >
-          <div className="relative">
-            <img 
-              src="/logo_disico_1.png" 
-              alt="DISICO Logo" 
-              className="h-10 w-auto rounded-xl border border-white/10 bg-slate-900/40 p-1.5 shadow-2xl transition-colors duration-300 group-hover:border-brand-blue/50"
-            />
-            {/* Efecto de brillo sutil en el logo al pasar el mouse */}
+          <div className="relative flex items-center">
+            {!imgError ? (
+              <img 
+                src="logo_disico_1.png" 
+                alt="DISICO Logo" 
+                className="h-10 w-auto rounded-xl border border-white/10 bg-slate-900/40 p-1.5 shadow-2xl transition-all duration-300 group-hover:border-brand-blue/50"
+                onError={() => {
+                  console.warn("Fallo al cargar 'logo_disico_1.png'. Activando fallback visual.");
+                  setImgError(true);
+                }}
+              />
+            ) : (
+              /* Fallback elegante si la imagen no se procesa correctamente en el servidor */
+              <div className="h-10 px-3 flex items-center gap-1.5 rounded-xl border border-brand-blue/30 bg-brand-blue/10 text-white shadow-2xl">
+                <span className="text-xl font-black tracking-tighter">SW</span>
+                <span className="text-xl font-black tracking-tighter text-brand-blue group-hover:text-brand-orange transition-colors">DISICO</span>
+              </div>
+            )}
+            
+            {/* Efecto de brillo sutil reactivo */}
             <motion.div 
-              className="absolute inset-0 rounded-xl bg-brand-blue/10 opacity-0 blur-lg group-hover:opacity-100 transition-opacity"
+              className="absolute inset-0 rounded-xl bg-brand-blue/20 opacity-0 blur-xl group-hover:opacity-100 transition-opacity pointer-events-none"
               initial={false}
             />
           </div>
